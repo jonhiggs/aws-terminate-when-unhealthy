@@ -24,3 +24,7 @@ function asAddInstance() {
     as-update-auto-scaling-group $AS --desired-capacity $((asCountInstances + 1))
   fi
 }
+
+function asRemoveInstance() {
+  ec2-terminate-instance $INSTANCE_ID
+}
