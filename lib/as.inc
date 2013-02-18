@@ -1,3 +1,9 @@
+function asPrimeData() {
+  if [ -z $AS_TMP_FILE ] || [ -z $AS ]; then return 1; fi
+  as-describe-auto-scaling-group $AS > $AS_TMP_FILE
+  return 0
+}
+
 function asCountInstances() {
   grep -c ^INSTANCE ${AS_TMP_FILE}
 }

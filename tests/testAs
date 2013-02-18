@@ -22,6 +22,18 @@ EOF
   assertFalse "there should be equal instances in elb and as" "asAllInstancesInElb"
 }
 
+testAsPrimeData() {
+  AS_TMP_FILE2=$AS_TMP_FILE
+  unset AS_TMP_FILE
+  assertFalse "return false if \$AS_TMP_FILE is unset" `asPrimeData`
+  AS_TMP_FILE=$AS_TMP_FILE2
+
+  AS2=$AS
+  unset AS
+  assertFalse "return false if \$AS is unset" `asPrimeData`
+  AS=$AS2
+}
+
 oneTimeSetUp() {
   # load include to test
   . ../lib/elb.inc
