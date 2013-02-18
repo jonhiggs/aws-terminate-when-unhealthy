@@ -1,0 +1,5 @@
+== aws-terminate-when-unhealthy
+
+An EC2 instance behind an Elastic Load Balancer can become unhealthy according
+to the ELB healthcheck but remain healthy according to the autoscaler. This
+script is designed to detect if an instance is in that state and terminate it.
