@@ -29,10 +29,10 @@ testElbOutOfService() {
 }
 
 testElbPrimeData() {
-  TMP_FILE2=$TMP_FILE
-  unset TMP_FILE
+  ELB_TMP_FILE2=$ELB_TMP_FILE
+  unset ELB_TMP_FILE
   assertFalse "return false if \$TMP_DATA is unset" `elbPrimeData`
-  TMP_FILE=$TMP_FILE2
+  ELB_TMP_FILE=$ELB_TMP_FILE2
 
   ELB2=$ELB
   unset ELB
@@ -52,10 +52,10 @@ oneTimeSetUp() {
   # load include to test
   . ../lib/elb.inc
   ELB="FAKEELB"
-  TMP_FILE=`mktemp -t terminate_test_elb`
+  ELB_TMP_FILE=`mktemp -t terminate_test_elb`
 
-  # PRIME THE TMP_FILE
-  cat > $TMP_FILE <<EOF
+  # PRIME THE ELB_TMP_FILE
+  cat > $ELB_TMP_FILE <<EOF
 INSTANCE_ID  i-aaaaaaaa  InService  N/A  N/A
 INSTANCE_ID  i-bbbbbbbb  OutOfService  N/A  N/A
 INSTANCE_ID  i-cccccccc  InService  N/A  N/A
@@ -65,7 +65,7 @@ EOF
 }
 
 oneTimeTearDown() {
-  rm -f $TMP_FILE
+  rm -f $ELB_TMP_FILE
 }
 
 # load and run shUnit2
