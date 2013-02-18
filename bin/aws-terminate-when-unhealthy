@@ -1,22 +1,21 @@
 #!/bin/bash
+source `basedir $0`/../lib/as.inc
+source `basedir $0`/../lib/elb.inc
 source `basedir $0`/../lib/service.inc
 source `basedir $0`/../lib/system.inc
-source `basedir $0`/../lib/elb.inc
 
 ELB="your-elb"
 SERVICE_FILE="/tmp/last_in_service"
 OUT_OF_SERVICE_THRESHOLD=1200                 # shut down instance if it's been out of service for over 20 minutes.
 OUT_OF_SERVICE_PRECAUTION_THRESHOLD=300       # spin up another instance as a precaution if its been offline for 5 minutes.
-TMP_FILE=`mktemp -t terminate_test_elb`
+ELB_TMP_FILE=`mktemp -t terminate_test_elb`
+AS_TMP_FILE=`mktemp -t terminate_test_as`
 
 systemGetInstanceId
 
-if ! elbMember; then
-  exit 0
-fi
+if ! elbMember; then exit 0; fi
 
-elbPrimeData
-asPrimeData
+elbPrimeData && asPrimeData
 
 if serviceMaybeOutOfService; then
   asAddInstance
@@ -28,5 +27,5 @@ else
   serviceUpdateTimeLastHealthy
 fi
 
-rm -f terminate_test_elb
+rm -f $ELB_TMP_FILE $AS_TMP_FILE
 # vim: ai ts=2 sw=2 et sts=2 ft=sh
