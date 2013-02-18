@@ -15,10 +15,22 @@ testServiceUpdateTimeLastHealthy() {
   assertTrue "attempt to update the time last in service" "egrep '[0-9]{10}' $SERVICE_FILE"
 }
 
+testServiceOutOfService() {
+  echo -n > ${SERVICE_FILE}
+  assertFalse "service has an unknown state" "serviceOutOfService"
+
+  echo $((`date +%s` - $OUT_OF_SERVICE_THRESHOLD + 10)) > ${SERVICE_FILE}
+  assertFalse "service should be online" "serviceOutOfService"
+
+  echo $((`date +%s` - $OUT_OF_SERVICE_THRESHOLD - 10)) > ${SERVICE_FILE}
+  assertTrue "service should be offline" "serviceOutOfService"
+}
+
 oneTimeSetUp() {
   # load include to test
   . ../lib/service.inc
   SERVICE_FILE=`mktemp -t terminate_test`
+  OUT_OF_SERVICE_THRESHOLD=60
 }
 
 oneTimeTearDown() {
