@@ -31,7 +31,7 @@ testElbOutOfService() {
 testElbPrimeData() {
   ELB_TMP_FILE2=$ELB_TMP_FILE
   unset ELB_TMP_FILE
-  assertFalse "return false if \$TMP_DATA is unset" `elbPrimeData`
+  assertFalse "return false if \$ELB_TMP_FILE is unset" `elbPrimeData`
   ELB_TMP_FILE=$ELB_TMP_FILE2
 
   ELB2=$ELB
