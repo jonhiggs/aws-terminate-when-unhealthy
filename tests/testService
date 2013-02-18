@@ -1,13 +1,18 @@
 #! /bin/sh
-testServiceTimeLastHealthy() {
+testServiceGetTimeLastHealthy() {
   echo 60 > $SERVICE_FILE
-  assertEquals "Instance is healthy" "60" `serviceTimeLastHealthy`
+  assertEquals "Instance is healthy" "60" `serviceGetTimeLastHealthy`
 
   echo "2000000" > $SERVICE_FILE
-  assertEquals "Instance is not healthy" "2000000" `serviceTimeLastHealthy`
+  assertEquals "Instance is not healthy" "2000000" `serviceGetTimeLastHealthy`
 
   rm $SERVICE_FILE
-  assertEquals "Instance has never been healthy" "0" `serviceTimeLastHealthy`
+  assertEquals "Instance has never been healthy" "0" `serviceGetTimeLastHealthy`
+}
+
+testServiceUpdateTimeLastHealthy() {
+  serviceUpdateTimeLastHealthy
+  assertTrue "attempt to update the time last in service" "egrep '[0-9]{10}' $SERVICE_FILE"
 }
 
 oneTimeSetUp() {
