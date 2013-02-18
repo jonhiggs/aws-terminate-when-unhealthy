@@ -1,19 +1,19 @@
 #! /bin/sh
 testServiceTimeLastHealthy() {
-  echo 60 > $TMP_FILE
+  echo 60 > $SERVICE_FILE
   assertEquals "Instance is healthy" "60" `serviceTimeLastHealthy`
 
-  echo "2000000" > $TMP_FILE
+  echo "2000000" > $SERVICE_FILE
   assertEquals "Instance is not healthy" "2000000" `serviceTimeLastHealthy`
 
-  rm $TMP_FILE
+  rm $SERVICE_FILE
   assertEquals "Instance has never been healthy" "0" `serviceTimeLastHealthy`
 }
 
 oneTimeSetUp() {
   # load include to test
   . ../lib/service.inc
-  TMP_FILE=`mktemp -t terminate_test`
+  SERVICE_FILE=`mktemp -t terminate_test`
 }
 
 oneTimeTearDown() {
