@@ -40,6 +40,14 @@ testElbPrimeData() {
   ELB=$ELB2
 }
 
+testElbCountInstances() {
+  assertEquals "count instances" "4" `elbCountInstances`
+}
+
+testElbCountHealthyInstances() {
+  assertEquals "count healthy instances" "3" `elbCountHealthyInstances`
+}
+
 oneTimeSetUp() {
   # load include to test
   . ../lib/elb.inc

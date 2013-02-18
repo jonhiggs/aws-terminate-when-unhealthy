@@ -20,3 +20,15 @@ function elbOutOfService() {
   egrep "^INSTANCE_ID\ +$INSTANCE_ID\ +.*" ${TMP_FILE} | awk '{ print $3 }' | grep "^OutOfService$" &> /dev/null
   return $? 
 }
+
+function elbCountInstances() {
+  wc -l < ${ELB_TMP_FILE}
+}
+
+function elbCountHealthyInstances() {
+  grep -c InService ${ELB_TMP_FILE}
+}
+
+function elbCountInstancesComingOnline() {
+  $(( `elbCountInstances` - `elbCountHealthyInstances` ))
+}
