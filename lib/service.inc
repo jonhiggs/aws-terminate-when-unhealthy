@@ -1,20 +1,32 @@
 function serviceGetTimeLastHealthy() {
-  cat ${SERVICE_FILE} 2> /dev/null || echo 0
+  if [ -s ${SERVICE_FILE} ]; then
+    cat ${SERVICE_FILE} 2> /dev/null
+  else
+    echo 0
+  fi
 }
 
 function serviceUpdateTimeLastHealthy() {
   date +%s > ${SERVICE_FILE}
 }
 
+function serviceEverInService() {
+  cat $SERVICE_FILE | egrep "^[0-9]{10}$" &> /dev/null || return 1
+}
+
+function serviceMaybeOutOfService() {
+  # been out of service for a little while. To early to terminate but we should
+  # scale up as a precaution
+
+  oldest_valid_time=$((`date +%s` - ${OUT_OF_SERVICE_PRECAUTION_THRESHOLD} ))
+  if [ ! -s ${SERVICE_FILE} ]; then return 1; fi
+  if [ `serviceGetTimeLastHealthy` -gt $oldest_valid_time ]; then return 1; fi
+}
+
 function serviceOutOfService() {
   # service is considered offline and will be terminated.
-  oldest_valid_time=$((`date +%s` - ${OUT_OF_SERVICE_THRESHOLD} ))
 
-  if [ `serviceGetTimeLastHealthy` -eq 0 ]; then
-    return 1
-  elif [ `serviceGetTimeLastHealthy` -lt ${oldest_valid_time} ]; then
-    return 0
-  else
-    return 1
-  fi
+  oldest_valid_time=$((`date +%s` - ${OUT_OF_SERVICE_THRESHOLD} ))
+  if [ ! -s ${SERVICE_FILE} ]; then return 1; fi
+  if [ `serviceGetTimeLastHealthy` -gt ${oldest_valid_time} ]; then return 1; fi
 }

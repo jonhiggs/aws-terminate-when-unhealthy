@@ -1,6 +1,8 @@
 function elbPrimeData() {
-  # not done
-  return 1
+  if [ -z $TMP_FILE ]; then return 1; fi
+  if [ -z $ELB ]; then return 1; fi
+  elb-describe-instance-health $ELB > $TMP_FILE
+  return 0
 }
 
 function elbMember() {
@@ -11,8 +13,10 @@ function elbMember() {
 }
 
 function elbOutOfService() {
-  if [ -z ${INSTANCE_ID} ]; then return 1; fi
+  # elb thinks the instance is out of service. This doesn't mean we will shut
+  # it down just yet. That is the job of serviceOutOfService.
 
+  if [ -z ${INSTANCE_ID} ]; then return 1; fi
   egrep "^INSTANCE_ID\ +$INSTANCE_ID\ +.*" ${TMP_FILE} | awk '{ print $3 }' | grep "^OutOfService$" &> /dev/null
   return $? 
 }

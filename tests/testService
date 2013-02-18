@@ -1,13 +1,16 @@
 #! /bin/sh
 testServiceGetTimeLastHealthy() {
+  rm $SERVICE_FILE
+  assertEquals "Instance has never been healthy" "0" `serviceGetTimeLastHealthy`
+
+  touch $SERVICE_FILE
+  assertEquals "service file is empty" "0" `serviceGetTimeLastHealthy`
+
   echo 60 > $SERVICE_FILE
   assertEquals "Instance is healthy" "60" `serviceGetTimeLastHealthy`
 
   echo "2000000" > $SERVICE_FILE
   assertEquals "Instance is not healthy" "2000000" `serviceGetTimeLastHealthy`
-
-  rm $SERVICE_FILE
-  assertEquals "Instance has never been healthy" "0" `serviceGetTimeLastHealthy`
 }
 
 testServiceUpdateTimeLastHealthy() {
@@ -16,8 +19,11 @@ testServiceUpdateTimeLastHealthy() {
 }
 
 testServiceOutOfService() {
-  echo -n > ${SERVICE_FILE}
-  assertFalse "service has an unknown state" "serviceOutOfService"
+  rm $SERVICE_FILE
+  assertFalse "service file doesn't exist" "serviceOutOfService"
+
+  touch $SERVICE_FILE
+  assertFalse "service file is empty" "serviceOutOfService"
 
   echo $((`date +%s` - $OUT_OF_SERVICE_THRESHOLD + 10)) > ${SERVICE_FILE}
   assertFalse "service should be online" "serviceOutOfService"
@@ -26,11 +32,59 @@ testServiceOutOfService() {
   assertTrue "service should be offline" "serviceOutOfService"
 }
 
+testServiceMaybeOutOfService() {
+  rm $SERVICE_FILE
+  assertFalse "service file doesn't exist" "serviceMaybeOutOfService"
+
+  touch $SERVICE_FILE
+  assertFalse "service file is empty" "serviceMaybeOutOfService"
+
+  echo $((`date +%s` - $OUT_OF_SERVICE_PRECAUTION_THRESHOLD - 10)) > ${SERVICE_FILE}
+  assertTrue "should spin up another instance as a precaution" "serviceMaybeOutOfService"
+
+  echo $((`date +%s` - $OUT_OF_SERVICE_PRECAUTION_THRESHOLD + 10)) > ${SERVICE_FILE}
+  assertFalse "everything is fine and dandy. do nothing" "serviceMaybeOutOfService"
+}
+
+testServiceEverInService() {
+  echo -n > $SERVICE_FILE
+  assertFalse "service file is empty" "serviceEverInService"
+
+  echo -n "blahblahblah" > $SERVICE_FILE
+  assertFalse "service file contains weird data" "serviceEverInService"
+
+  echo -n "blahblahblah00000000000000" > $SERVICE_FILE
+  assertFalse "service file contains more weird data" "serviceEverInService"
+
+  echo -n 124543234543 > $SERVICE_FILE
+  assertFalse "service file contains a date with no new line" "serviceEverInService"
+
+  echo 1361198947 > $SERVICE_FILE
+  assertTrue "service file contains a date" "serviceEverInService"
+
+  echo -n > $SERVICE_FILE
+  assertFalse "service file has no data" "serviceEverInService"
+
+  echo blah > $SERVICE_FILE
+  echo blah >> $SERVICE_FILE
+  assertFalse "service file contains multiple lines" "serviceEverInService"
+
+  echo blah > $SERVICE_FILE
+  echo blah >> $SERVICE_FILE
+  echo 124543234543 >> $SERVICE_FILE
+  assertFalse "service file contains multiple lines, one of which is a date" "serviceEverInService"
+
+  echo 124543234543 >> $SERVICE_FILE
+  echo 124543234548 >> $SERVICE_FILE
+  assertFalse "service file contains multiple dates" "serviceEverInService"
+}
+
 oneTimeSetUp() {
   # load include to test
   . ../lib/service.inc
   SERVICE_FILE=`mktemp -t terminate_test_service`
-  OUT_OF_SERVICE_THRESHOLD=60
+  OUT_OF_SERVICE_THRESHOLD=300
+  OUT_OF_SERVICE_PRECAUTION_THRESHOLD=60
 }
 
 oneTimeTearDown() {
