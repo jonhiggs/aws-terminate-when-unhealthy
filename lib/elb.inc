@@ -1,6 +1,5 @@
 function elbPrimeData() {
-  if [ -z $ELB_TMP_FILE ]; then return 1; fi
-  if [ -z $ELB ]; then return 1; fi
+  if [ -z $ELB_TMP_FILE ] || [ -z $ELB ]; then return 1; fi
   elb-describe-instance-health $ELB > $ELB_TMP_FILE
   return 0
 }
