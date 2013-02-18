@@ -17,6 +17,10 @@ fi
 
 elbPrimeData
 
+if serviceMaybeOutOfService; then
+  elbAddInstance
+fi
+
 if serviceOutOfService; then
   remove_self_from_elb
 else
