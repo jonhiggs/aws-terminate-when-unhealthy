@@ -12,7 +12,7 @@ function asAllInstancesInElb() {
   if [ `asCountInstances` -ne `elbCountInstances` ]; then return 1; fi
 }
 
-function asIncrementCapacity() {
+function asAddInstance() {
   # only add instances if we aren't waiting for one to come online.
   if ! asAllInstancesInElb; then
     as-update-auto-scaling-group $AS --desired-capacity $((asCountInstances + 1))
