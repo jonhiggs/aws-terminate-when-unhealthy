@@ -29,7 +29,7 @@ testServiceOutOfService() {
 oneTimeSetUp() {
   # load include to test
   . ../lib/service.inc
-  SERVICE_FILE=`mktemp -t terminate_test`
+  SERVICE_FILE=`mktemp -t terminate_test_service`
   OUT_OF_SERVICE_THRESHOLD=60
 }
 

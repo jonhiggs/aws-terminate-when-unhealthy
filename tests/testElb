@@ -2,7 +2,10 @@
 
 testElbMember() {
   INSTANCE_ID="i-aaaaaaaa"
-  assertTrue "instance is a member of elb" "elbMember"
+  assertTrue "instance is an inservice member of elb" "elbMember"
+
+  INSTANCE_ID="i-bbbbbbbb"
+  assertTrue "instance is an outofservice member of elb" "elbMember"
 
   INSTANCE_ID="i-xxxxxxxx"
   assertFalse "instance is not member of elb" "elbMember"
@@ -13,13 +16,16 @@ testElbMember() {
 
 testElbOutOfService() {
   INSTANCE_ID="i-aaaaaaaa"
-  assertTrue "instance is a member of elb" "elbMember"
+  assertFalse "instance is in service" "elbOutOfService"
+
+  INSTANCE_ID="i-bbbbbbbb"
+  assertTrue "instance is out of service" "elbOutOfService"
 
   INSTANCE_ID="i-xxxxxxxx"
-  assertFalse "instance is not member of elb" "elbMember"
+  assertFalse "instance is not member of elb" "elbOutOfService"
 
   INSTANCE_ID=""
-  assertFalse "instance doesn't know who it is" "elbMember"
+  assertFalse "instance doesn't know who it is" "elbOutOfService"
 }
 
 oneTimeSetUp() {
@@ -31,7 +37,7 @@ oneTimeSetUp() {
   # PRIME THE TMP_FILE
   cat > $TMP_FILE <<EOF
 INSTANCE_ID  i-aaaaaaaa  InService  N/A  N/A
-INSTANCE_ID  i-bbbbbbbb  InService  N/A  N/A
+INSTANCE_ID  i-bbbbbbbb  OutOfService  N/A  N/A
 INSTANCE_ID  i-cccccccc  InService  N/A  N/A
 INSTANCE_ID  i-dddddddd  InService  N/A  N/A
 EOF
