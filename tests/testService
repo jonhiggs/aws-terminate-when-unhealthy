@@ -1,0 +1,26 @@
+#! /bin/sh
+testServiceTimeLastHealthy() {
+  echo 60 > $TMP_FILE
+  assertEquals "Instance is healthy" "60" `serviceTimeLastHealthy`
+
+  echo "2000000" > $TMP_FILE
+  assertEquals "Instance is not healthy" "2000000" `serviceTimeLastHealthy`
+
+  rm $TMP_FILE
+  assertEquals "Instance has never been healthy" "0" `serviceTimeLastHealthy`
+}
+
+oneTimeSetUp() {
+  # load include to test
+  . ../lib/service.inc
+  TMP_FILE=`mktemp -t terminate_test`
+}
+
+oneTimeTearDown() {
+  rm -f $TMP_FILE
+}
+
+# load and run shUnit2
+. ./shunit/src/shunit2
+
+# vim: ai ts=2 sw=2 et sts=2 ft=sh
