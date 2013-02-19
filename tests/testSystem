@@ -1,10 +1,10 @@
 #!/bin/bash
 
-function testSystemIsEc2() {
-  # one of these two tests will fail.
-  assertFalse "system isn't an ec2 instance" "systemIsEc2"
-  assertTrue "system is an ec2 instance" "systemIsEc2"
-}
+#function testSystemIsEc2() {
+#  # one of these two tests will fail.
+#  assertFalse "system isn't an ec2 instance" "systemIsEc2"
+#  assertTrue "system is an ec2 instance" "systemIsEc2"
+#}
 
 function testSystemGetMeta() {
   if systemIsEc2; then
@@ -24,23 +24,35 @@ function testSystemCleanUp() {
   assertFalse "AS_TMP_FILE should be deleted" "[ -f $AS_TMP_FILE ]"
 }
 
+function testSystemError() {
+  assertFalse "Error should return 1 if no message" "systemError"
+  assertEquals "Error should say something" "rar" `systemError "rar"`
+}
+
+function testSystemCheckVariableSet() {
+  assertFalse "Check for unset variable" "systemCheckVaribleSet BLAH"
+  #assertTrue "Check error message" "systemCheckVariableSet BLAH | egrep 'You need to set'"
+  
+  BLAH="single"
+  assertTrue "Check for set single-word variable" "systemCheckVariableSet BLAH"
+  BLAH="now i'm set"
+  assertTrue "Check for set multi-word variable" "systemCheckVariableSet BLAH"
+}
+
 
 function oneTimeSetUp() {
   # load include to test
   source ../lib/system.inc
   ELB_TMP_FILE=`mktemp -t XXXXXX`
   AS_TMP_FILE=`mktemp -t XXXXXX`
+  unset BLAH
+  BLAH="whatever"
 }
 
 function SetUp() {
   unset IS_EC2
   unset INSTANCE_ID
   unset AMI_ID
-}
-
-function oneTimeTearDown() {
-  echo "== details"
-  echo "instance: $INSTANCE_ID"
 }
 
 # load and run shUnit2

@@ -31,12 +31,12 @@ function testElbOutOfService() {
 function testElbPrimeData() {
   ELB_TMP_FILE2=$ELB_TMP_FILE
   unset ELB_TMP_FILE
-  assertFalse "return false if \$ELB_TMP_FILE is unset" `elbPrimeData`
+  assertFalse "return false if \$ELB_TMP_FILE is unset" "elbPrimeData"
   ELB_TMP_FILE=$ELB_TMP_FILE2
 
   ELB2=$ELB
   unset ELB
-  assertFalse "return false if \$ELB is unset" `elbPrimeData`
+  assertFalse "return false if \$ELB is unset" "elbPrimeData"
   ELB=$ELB2
 }
 
@@ -51,6 +51,7 @@ function testElbCountHealthyInstances() {
 function oneTimeSetUp() {
   # load include to test
   source ../lib/elb.inc
+  source ../lib/system.inc
   ELB="FAKEELB"
   ELB_TMP_FILE=`mktemp -t terminate_test_elb.XXXXXXXX`
 

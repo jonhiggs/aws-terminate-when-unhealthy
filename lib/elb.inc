@@ -1,12 +1,13 @@
 function elbPrimeData() {
-  if [ -z $ELB_TMP_FILE ] || [ -z $ELB ]; then return 1; fi
+  systemCheckVariableSet ELB_TMP_FILE || return 1
+  systemCheckVariableSet ELB || return 1
   elb-describe-instance-health $ELB > $ELB_TMP_FILE
   return 0
 }
 
 function elbMember() {
-  if [ -z ${INSTANCE_ID} ]; then return 1; fi
-
+  systemCheckVariableSet INSTANCE_ID || return 1
+  systemCheckVariableSet ELB_TMP_FILE || return 1
   egrep "^INSTANCE_ID\ +$INSTANCE_ID\ +.*" ${ELB_TMP_FILE} &> /dev/null
   return $?
 }
@@ -14,17 +15,25 @@ function elbMember() {
 function elbOutOfService() {
   # elb thinks the instance is out of service. This doesn't mean we will shut
   # it down just yet. That is the job of serviceOutOfService.
+  systemCheckVariableSet INSTANCE_ID || return 1
+  systemCheckVariableSet ELB_TMP_FILE || return 1
 
-  if [ -z ${INSTANCE_ID} ]; then return 1; fi
+  if [ -z ${INSTANCE_ID} ]; then
+    systemError "I don't know what the INSTANCE_ID is."
+    return 1
+  fi
+
   egrep "^INSTANCE_ID\ +$INSTANCE_ID\ +.*" ${ELB_TMP_FILE} | awk '{ print $3 }' | grep "^OutOfService$" &> /dev/null
   return $? 
 }
 
 function elbCountInstances() {
+  systemCheckVariableSet ELB_TMP_FILE || return 1
   wc -l < ${ELB_TMP_FILE}
 }
 
 function elbCountHealthyInstances() {
+  systemCheckVariableSet ELB_TMP_FILE || return 1
   grep -c InService ${ELB_TMP_FILE}
 }
 

@@ -49,6 +49,7 @@ function testServiceMaybeOutOfService() {
 function oneTimeSetUp() {
   # load include to test
   source ../lib/service.inc
+  source ../lib/system.inc
   SERVICE_FILE=`mktemp -t terminate_test_service.XXXXXXXX`
   OUT_OF_SERVICE_THRESHOLD=300
   OUT_OF_SERVICE_PRECAUTION_THRESHOLD=60

@@ -6,6 +6,7 @@ source `dirname $0`/../lib/system.inc
 
 INSTANCE_ID=`systemGetMeta instance-id`
 ELB="your-elb"
+AS="your-as"
 SERVICE_FILE="/tmp/last_in_service"
 OUT_OF_SERVICE_THRESHOLD=1200                 # shut down instance if it's been out of service for over 20 minutes.
 OUT_OF_SERVICE_PRECAUTION_THRESHOLD=300       # spin up another instance as a precaution if its been offline for 5 minutes.

@@ -25,12 +25,12 @@ EOF
 function testAsPrimeData() {
   AS_TMP_FILE2=$AS_TMP_FILE
   unset AS_TMP_FILE
-  assertFalse "return false if \$AS_TMP_FILE is unset" `asPrimeData`
+  assertFalse "return false if \$AS_TMP_FILE is unset" "asPrimeData"
   AS_TMP_FILE=$AS_TMP_FILE2
 
   AS2=$AS
   unset AS
-  assertFalse "return false if \$AS is unset" `asPrimeData`
+  assertFalse "return false if \$AS is unset" "asPrimeData"
   AS=$AS2
 }
 
@@ -38,6 +38,7 @@ function oneTimeSetUp() {
   # load include to test
   source ../lib/elb.inc
   source ../lib/as.inc
+  source ../lib/system.inc
   AS="my-as-group"
   AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXXXXX`
 

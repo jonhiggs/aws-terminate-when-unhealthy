@@ -1,5 +1,5 @@
 function systemSendEmail() {
-  echo "not implemented" 
+  systemError "systemSendEmail is not yet implemented" 
   return 1
 }
 
@@ -16,7 +16,7 @@ function systemIsEc2() {
   return $IS_EC2
 }
 
-function systemGetMeta(){
+function systemGetMeta() {
   if [ -z $1 ]; then return 1; fi
   detail=$1
 
@@ -32,7 +32,7 @@ function systemGetMeta(){
 
   value=`curl --connect-timeout 1 -s $url`
   if [ $? -ne 0 ]; then
-    echo "could not curl the metadata. this should not happen."
+    systemError "could not curl the metadata. this should not happen."
     return 1
   fi
 
@@ -44,3 +44,20 @@ function systemCleanUp() {
   rm -f $ELB_TMP_FILE $AS_TMP_FILE
   return 0
 }
+
+function systemError() {
+  if [ -z "$1" ]; then return 1; fi
+  echo "${@:2,1}"
+  return 0
+}
+
+function systemCheckVariableSet() {
+  if [ -z "$1" ]; then return 2; fi
+
+  if [ -z ${!1} ]; then
+    systemError "You need to set the '$1' variable."
+    return 1
+  fi
+  return 0
+}
+
