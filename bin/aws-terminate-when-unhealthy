@@ -4,7 +4,7 @@ source `dirname $0`/../lib/elb.inc
 source `dirname $0`/../lib/service.inc
 source `dirname $0`/../lib/system.inc
 
-INSTANCE_ID=`serviceGetMeta instance-id`
+INSTANCE_ID=`systemGetMeta instance-id`
 ELB="your-elb"
 SERVICE_FILE="/tmp/last_in_service"
 OUT_OF_SERVICE_THRESHOLD=1200                 # shut down instance if it's been out of service for over 20 minutes.
