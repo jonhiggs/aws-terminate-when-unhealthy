@@ -17,7 +17,7 @@ function systemIsEc2() {
 }
 
 function systemGetMeta(){
-  if [ -z $detail ]; then return 1; fi
+  if [ -z $1]; then return 1; fi
   if ! systemIsEc2; then return 1; fi
 
   detail=$1
