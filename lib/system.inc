@@ -29,7 +29,7 @@ function systemGetMeta(){
     return 1
   fi
 
-  ${$var_name}=$value
+  eval ${var_name}=$value
 }
 
 function systemGetInstanceId(){
