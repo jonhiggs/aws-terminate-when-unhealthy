@@ -21,8 +21,17 @@ function systemGetMeta(){
   if ! systemIsEc2; then return 1; fi
 
   detail=$1
-  url="http://169.254.169.254/latest/meta-data/$detail"
+
   var_name=`echo $detail | tr '[:lower:]' '[:upper:]' | sed 's/-/_/g'`
+  if [ ! -z ${!var_name} ]; then
+    echo ${!var_name}
+    return 0
+  fi
+
+
+  url="http://169.254.169.254/latest/meta-data/$detail"
+
+
   value=`curl --connect-timeout 1 -s $url`
   if [ $? -ne 0 ]; then
     echo "could not curl the metadata. this should not happen."
@@ -30,6 +39,7 @@ function systemGetMeta(){
   fi
 
   eval ${var_name}=$value
+  echo ${!var_name}
 }
 
 function systemGetInstanceId(){
