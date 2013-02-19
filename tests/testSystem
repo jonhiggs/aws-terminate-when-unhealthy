@@ -2,8 +2,9 @@
 shopt -s expand_aliases
 
 testSystemIsEc2() {
-  # this cannot be tested  
+  # one of these two tests will fail.
   assertFalse "system isn't an ec2 instance" "systemIsEc2"
+  assertTrue "system is an ec2 instance" "systemIsEc2"
 }
 
 testSystemGetMeta() {
