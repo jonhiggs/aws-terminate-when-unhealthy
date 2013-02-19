@@ -1,16 +1,16 @@
 #!/bin/bash
-source `basedir $0`/../lib/as.inc
-source `basedir $0`/../lib/elb.inc
-source `basedir $0`/../lib/service.inc
-source `basedir $0`/../lib/system.inc
+source `basename $0`/../lib/as.inc
+source `basename $0`/../lib/elb.inc
+source `basename $0`/../lib/service.inc
+source `basename $0`/../lib/system.inc
 
 INSTANCE_ID=`serviceGetMeta instance-id`
 ELB="your-elb"
 SERVICE_FILE="/tmp/last_in_service"
 OUT_OF_SERVICE_THRESHOLD=1200                 # shut down instance if it's been out of service for over 20 minutes.
 OUT_OF_SERVICE_PRECAUTION_THRESHOLD=300       # spin up another instance as a precaution if its been offline for 5 minutes.
-ELB_TMP_FILE=`mktemp -t terminate_test_elb`
-AS_TMP_FILE=`mktemp -t terminate_test_as`
+ELB_TMP_FILE=`mktemp -t terminate_test_elb.XXXXX`
+AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXX`
 
 if ! elbMember; then exit 0; fi
 
