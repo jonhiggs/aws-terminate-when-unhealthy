@@ -1,6 +1,6 @@
-#! /bin/sh
+#!/bin/bash
 
-testElbMember() {
+function testElbMember() {
   INSTANCE_ID="i-aaaaaaaa"
   assertTrue "instance is an inservice member of elb" "elbMember"
 
@@ -14,7 +14,7 @@ testElbMember() {
   assertFalse "instance doesn't know who it is" "elbMember"
 }
 
-testElbOutOfService() {
+function testElbOutOfService() {
   INSTANCE_ID="i-aaaaaaaa"
   assertFalse "instance is in service" "elbOutOfService"
 
@@ -28,7 +28,7 @@ testElbOutOfService() {
   assertFalse "instance doesn't know who it is" "elbOutOfService"
 }
 
-testElbPrimeData() {
+function testElbPrimeData() {
   ELB_TMP_FILE2=$ELB_TMP_FILE
   unset ELB_TMP_FILE
   assertFalse "return false if \$ELB_TMP_FILE is unset" `elbPrimeData`
@@ -40,17 +40,17 @@ testElbPrimeData() {
   ELB=$ELB2
 }
 
-testElbCountInstances() {
+function testElbCountInstances() {
   assertEquals "count instances" "4" `elbCountInstances`
 }
 
-testElbCountHealthyInstances() {
+function testElbCountHealthyInstances() {
   assertEquals "count healthy instances" "3" `elbCountHealthyInstances`
 }
 
-oneTimeSetUp() {
+function oneTimeSetUp() {
   # load include to test
-  . ../lib/elb.inc
+  source ../lib/elb.inc
   ELB="FAKEELB"
   ELB_TMP_FILE=`mktemp -t terminate_test_elb`
 
@@ -64,11 +64,11 @@ EOF
 
 }
 
-oneTimeTearDown() {
+function oneTimeTearDown() {
   rm -f $ELB_TMP_FILE
 }
 
 # load and run shUnit2
-. ./shunit/src/shunit2
+source ./shunit/src/shunit2
 
 # vim: ai ts=2 sw=2 et sts=2 ft=sh

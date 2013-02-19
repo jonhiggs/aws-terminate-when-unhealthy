@@ -1,5 +1,5 @@
-#! /bin/sh
-testServiceGetTimeLastHealthy() {
+#!/bin/bash
+function testServiceGetTimeLastHealthy() {
   rm $SERVICE_FILE
   assertEquals "Instance has never been healthy" "0" `serviceGetTimeLastHealthy`
 
@@ -13,12 +13,12 @@ testServiceGetTimeLastHealthy() {
   assertEquals "Instance is not healthy" "2000000" `serviceGetTimeLastHealthy`
 }
 
-testServiceUpdateTimeLastHealthy() {
+function testServiceUpdateTimeLastHealthy() {
   serviceUpdateTimeLastHealthy
   assertTrue "attempt to update the time last in service" "egrep '[0-9]{10}' $SERVICE_FILE"
 }
 
-testServiceOutOfService() {
+function testServiceOutOfService() {
   rm $SERVICE_FILE
   assertFalse "service file doesn't exist" "serviceOutOfService"
 
@@ -32,7 +32,7 @@ testServiceOutOfService() {
   assertTrue "service should be offline" "serviceOutOfService"
 }
 
-testServiceMaybeOutOfService() {
+function testServiceMaybeOutOfService() {
   rm $SERVICE_FILE
   assertFalse "service file doesn't exist" "serviceMaybeOutOfService"
 
@@ -46,19 +46,19 @@ testServiceMaybeOutOfService() {
   assertFalse "everything is fine and dandy. do nothing" "serviceMaybeOutOfService"
 }
 
-oneTimeSetUp() {
+function oneTimeSetUp() {
   # load include to test
-  . ../lib/service.inc
+  source ../lib/service.inc
   SERVICE_FILE=`mktemp -t terminate_test_service`
   OUT_OF_SERVICE_THRESHOLD=300
   OUT_OF_SERVICE_PRECAUTION_THRESHOLD=60
 }
 
-oneTimeTearDown() {
+function oneTimeTearDown() {
   rm -f $TMP_FILE
 }
 
 # load and run shUnit2
-. ./shunit/src/shunit2
+source ./shunit/src/shunit2
 
 # vim: ai ts=2 sw=2 et sts=2 ft=sh

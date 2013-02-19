@@ -1,13 +1,12 @@
-#! /bin/bash -i
-shopt -s expand_aliases
+#!/bin/bash
 
-testSystemIsEc2() {
+function testSystemIsEc2() {
   # one of these two tests will fail.
   assertFalse "system isn't an ec2 instance" "systemIsEc2"
   assertTrue "system is an ec2 instance" "systemIsEc2"
 }
 
-testSystemGetMeta() {
+function testSystemGetMeta() {
   assertFalse "should not get meta if not an ec2 instance" "systemGetMeta instance-id"
 
   if systemIsEc2; then
@@ -19,17 +18,17 @@ testSystemGetMeta() {
   fi
 }
 
-oneTimeSetUp() {
+function oneTimeSetUp() {
   # load include to test
-  . ../lib/system.inc
+  source ../lib/system.inc
 }
 
-SetUp() {
+function SetUp() {
   unset IS_EC2
 }
 
 
 # load and run shUnit2
-. ./shunit/src/shunit2
+source ./shunit/src/shunit2
 
 # vim: ai ts=2 sw=2 et sts=2 ft=sh

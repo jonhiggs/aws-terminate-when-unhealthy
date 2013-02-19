@@ -1,14 +1,14 @@
-#! /bin/sh
+#!/bin/bash
 
-testAsCountInstances() {
+function testAsCountInstances() {
   assertEquals "count instances" "4" `asCountInstances`
 }
 
-testAsCountHealthyInstances() {
+function testAsCountHealthyInstances() {
   assertEquals "count healthy instances" "4" `asCountHealthyInstances`
 }
 
-testAsAllInstancesInElb() {
+function testAsAllInstancesInElb() {
   assertTrue "there should be equal instances in elb and as" "asAllInstancesInElb"
 
   cat > $AS_TMP_FILE <<EOF
@@ -22,7 +22,7 @@ EOF
   assertFalse "there should be equal instances in elb and as" "asAllInstancesInElb"
 }
 
-testAsPrimeData() {
+function testAsPrimeData() {
   AS_TMP_FILE2=$AS_TMP_FILE
   unset AS_TMP_FILE
   assertFalse "return false if \$AS_TMP_FILE is unset" `asPrimeData`
@@ -34,10 +34,10 @@ testAsPrimeData() {
   AS=$AS2
 }
 
-oneTimeSetUp() {
+function oneTimeSetUp() {
   # load include to test
-  . ../lib/elb.inc
-  . ../lib/as.inc
+  source ../lib/elb.inc
+  source ../lib/as.inc
   AS="my-as-group"
   AS_TMP_FILE=`mktemp -t terminate_test_as`
 
@@ -45,7 +45,7 @@ oneTimeSetUp() {
   ELB_TMP_FILE=`mktemp -t terminate_test_elb`
 }
 
-setUp() {
+function setUp() {
   # PRIME THE AS_TMP_FILE
   cat > $AS_TMP_FILE <<EOF
 AUTO-SCALING-GROUP  my-as-group  my-current-launch-config  eu-west-1a,eu-west-1c  whatever-this-is  2  8  4
@@ -64,11 +64,11 @@ INSTANCE_ID  i-dddddddd  InService  N/A  N/A
 EOF
 }
 
-oneTimeTearDown() {
+function oneTimeTearDown() {
   rm -f $AS_TMP_FILE
 }
 
 # load and run shUnit2
-. ./shunit/src/shunit2
+source ./shunit/src/shunit2
 
 # vim: ai ts=2 sw=2 et sts=2 ft=sh
