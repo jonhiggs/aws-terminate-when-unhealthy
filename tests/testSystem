@@ -10,15 +10,12 @@ function testSystemGetMeta() {
   if systemIsEc2; then
     assertTrue "when there is no instance id, it should get one" "systemGetMeta instance-id"
     INSTANCE_ID=`systemGetMeta instance-id`
-    assertTrue "should get instance-id of ec2 instance" "systemGetMeta instance-id"
-    assertTrue "should be an instance id" "echo $INSTANCE_ID | egrep '^i-[0-9a-f]{8}$'"
   else
     INSTANCE_ID="i-ffffffff"
-    assertEquals "should get the set \$INSTANCE_ID" "i-ffffffff" `systemGetMeta instance-id`
-
-    AMI_ID="ami-ffff"
-    assertEquals "should get the set \$AMI_ID" "ami-ffff" `systemGetMeta ami-id`
   fi
+
+  assertTrue "should get instance-id of ec2 instance" "systemGetMeta instance-id"
+  assertTrue "should be an instance id" "echo $INSTANCE_ID | egrep '^i-[0-9a-f]{8}$'"
 }
 
 function oneTimeSetUp() {
@@ -32,6 +29,10 @@ function SetUp() {
   unset AMI_ID
 }
 
+function oneTimeTearDown() {
+  echo "== details"
+  echo "instance: $INSTANCE_ID"
+}
 
 # load and run shUnit2
 source ./shunit/src/shunit2
