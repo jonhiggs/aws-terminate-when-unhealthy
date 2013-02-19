@@ -54,6 +54,7 @@ function oneTimeSetUp() {
   source ../lib/system.inc
   ELB="FAKEELB"
   ELB_TMP_FILE=`mktemp -t terminate_test_elb.XXXXXXXX`
+  INFO='false'
 
   # PRIME THE ELB_TMP_FILE
   cat > $ELB_TMP_FILE <<EOF

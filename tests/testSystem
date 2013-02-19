@@ -29,6 +29,20 @@ function testSystemError() {
   assertEquals "Error should say something" "rar" `systemError "rar"`
 }
 
+function testSystemInfo() {
+  assertFalse "Test no info message" "systemInfo"
+
+  INFO=""
+  assertTrue "Test an info message with no INFO var" "systemInfo rar"
+
+  INFO="true"
+  assertTrue "Test an info message with INFO var" "systemInfo rar"
+  assertEquals "Info. Talk!" "rar" `systemInfo "rar"`
+
+  INFO="false"
+  assertTrue "Test an info message with INFO var" "systemInfo rar"
+}
+
 function testSystemCheckVariableSet() {
   assertFalse "Check for unset variable" "systemCheckVaribleSet BLAH"
   #assertTrue "Check error message" "systemCheckVariableSet BLAH | egrep 'You need to set'"

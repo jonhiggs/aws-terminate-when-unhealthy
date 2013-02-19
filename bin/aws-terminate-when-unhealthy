@@ -4,6 +4,7 @@ source `dirname $0`/../lib/elb.inc
 source `dirname $0`/../lib/service.inc
 source `dirname $0`/../lib/system.inc
 
+INFO='true'
 INSTANCE_ID=`systemGetMeta instance-id`
 ELB="your-elb"
 AS="your-as"

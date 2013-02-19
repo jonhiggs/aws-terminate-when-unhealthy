@@ -8,8 +8,15 @@ function elbPrimeData() {
 function elbMember() {
   systemCheckVariableSet INSTANCE_ID || return 1
   systemCheckVariableSet ELB_TMP_FILE || return 1
+  systemCheckVariableSet ELB || return 1
   egrep "^INSTANCE_ID\ +$INSTANCE_ID\ +.*" ${ELB_TMP_FILE} &> /dev/null
-  return $?
+
+  if [ $? -ne 0 ]; then
+    systemInfo "Instance '$INSTANCE_ID' is not in the ELB '$ELB'."
+    return 1
+  fi
+
+  return 0
 }
 
 function elbOutOfService() {

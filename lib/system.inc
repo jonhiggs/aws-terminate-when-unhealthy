@@ -51,6 +51,16 @@ function systemError() {
   return 0
 }
 
+function systemInfo() {
+  if [ -z "$1" ]; then return 1; fi
+
+  if [ -z $INFO ]; then return 0; fi
+  if ! `$INFO`; then return 0; fi
+
+  echo "${@:2,1}"
+  return 0
+}
+
 function systemCheckVariableSet() {
   if [ -z "$1" ]; then return 2; fi
 
