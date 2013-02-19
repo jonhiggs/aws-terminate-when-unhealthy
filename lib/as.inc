@@ -1,7 +1,7 @@
 function asPrimeData() {
   systemCheckVariableSet AS_TMP_FILE || return 1
   systemCheckVariableSet AS || return 1
-  as-describe-auto-scaling-group $AS > $AS_TMP_FILE
+  as-describe-auto-scaling-groups $AS > $AS_TMP_FILE
   return 0
 }
 
