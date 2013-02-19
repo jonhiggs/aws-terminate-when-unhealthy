@@ -39,10 +39,10 @@ function oneTimeSetUp() {
   source ../lib/elb.inc
   source ../lib/as.inc
   AS="my-as-group"
-  AS_TMP_FILE=`mktemp -t terminate_test_as`
+  AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXXXXX`
 
   ELB="FAKEELB"
-  ELB_TMP_FILE=`mktemp -t terminate_test_elb`
+  ELB_TMP_FILE=`mktemp -t terminate_test_elb.XXXXXXXX`
 }
 
 function setUp() {

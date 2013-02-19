@@ -52,7 +52,7 @@ function oneTimeSetUp() {
   # load include to test
   source ../lib/elb.inc
   ELB="FAKEELB"
-  ELB_TMP_FILE=`mktemp -t terminate_test_elb`
+  ELB_TMP_FILE=`mktemp -t terminate_test_elb.XXXXXXXX`
 
   # PRIME THE ELB_TMP_FILE
   cat > $ELB_TMP_FILE <<EOF
