@@ -1,25 +1,30 @@
 #! /bin/bash -i
 shopt -s expand_aliases
 
-testSystemGetInstanceId() {
-  INSTANCE_ID="i-ffffffff"
-  assertEquals "instance id is already set" "i-ffffffff" `systemGetInstanceId`
-  assertTrue "we should have an instance id" "echo $INSTANCE_ID | egrep 'i-[0-9a-f]{8}'"
-  
-  # ONLY RUN THIS TEST IF META DATA IS AVAILABLE. IE. WE ARE AN EC2 INSTANCE.
-  if `curl --connect-timeout 1 -s http://169.254.169.254/latest/meta-data/instance-id`; then
-    unset INSTANCE_ID
-    assertFalse "We should get false because we are not on an ec2 instance" `systemGetInstanceId`
+testSystemIsEc2() {
+  # this cannot be tested  
+  assertFalse "system isn't an ec2 instance" "systemIsEc2"
+}
 
-    unset INSTANCE_ID
-    assertEquals "We should get false because we are not on an ec2 instance" `systemGetInstanceId`
-    assertTrue "we should have an instance id" "echo $INSTANCE_ID | egrep 'i-[0-9a-f]{8}'"
+testSystemGetMeta() {
+  assertFalse "should not get meta if not an ec2 instance" "systemGetMeta instance-id"
+
+  if systemIsEc2; then
+    assertTrue "should get instance-id of ec2 instance" "systemGetMeta instance-id"
+    assertTrue "should have an \$INSTANCE-ID set" "echo $INSTANCE_ID | egrep '^i-[0-9a-f]{8}$'"
+
+    assertTrue "should get ami-id of ec2 instance" "systemGetMeta ami-id"
+    assertTrue "should have an \$AMI-ID set" "echo $AMI_ID | egrep '^ami-[0-9a-f]{8}$'"
   fi
 }
 
 oneTimeSetUp() {
   # load include to test
   . ../lib/system.inc
+}
+
+SetUp() {
+  unset IS_EC2
 }
 
 
