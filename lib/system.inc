@@ -39,3 +39,8 @@ function systemGetMeta(){
   eval ${var_name}=$value
   echo ${!var_name}
 }
+
+function systemCleanUp() {
+  rm -f $ELB_TMP_FILE $AS_TMP_FILE
+  return 0
+}

@@ -18,9 +18,18 @@ function testSystemGetMeta() {
   assertTrue "should be an instance id" "echo $INSTANCE_ID | egrep '^i-[0-9a-f]{8}$'"
 }
 
+function testSystemCleanUp() {
+  systemCleanUp
+  assertFalse "ELB_TMP_FILE should be deleted" "[ -f $ELB_TMP_FILE ]"
+  assertFalse "AS_TMP_FILE should be deleted" "[ -f $AS_TMP_FILE ]"
+}
+
+
 function oneTimeSetUp() {
   # load include to test
   source ../lib/system.inc
+  ELB_TMP_FILE=`mktemp -t XXXXXX`
+  AS_TMP_FILE=`mktemp -t XXXXXX`
 }
 
 function SetUp() {

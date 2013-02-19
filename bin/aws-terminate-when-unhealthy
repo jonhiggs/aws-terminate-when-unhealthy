@@ -12,7 +12,7 @@ OUT_OF_SERVICE_PRECAUTION_THRESHOLD=300       # spin up another instance as a pr
 ELB_TMP_FILE=`mktemp -t terminate_test_elb.XXXXX`
 AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXX`
 
-if ! elbMember; then exit 0; fi
+if ! elbMember; then systemCleanUp; exit 0; fi
 
 elbPrimeData && asPrimeData
 
@@ -26,5 +26,5 @@ else
   serviceUpdateTimeLastHealthy
 fi
 
-rm -f $ELB_TMP_FILE $AS_TMP_FILE
+systemCleanUp
 # vim: ai ts=2 sw=2 et sts=2 ft=sh
