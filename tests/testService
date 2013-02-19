@@ -46,39 +46,6 @@ testServiceMaybeOutOfService() {
   assertFalse "everything is fine and dandy. do nothing" "serviceMaybeOutOfService"
 }
 
-testServiceEverInService() {
-  echo -n > $SERVICE_FILE
-  assertFalse "service file is empty" "serviceEverInService"
-
-  echo -n "blahblahblah" > $SERVICE_FILE
-  assertFalse "service file contains weird data" "serviceEverInService"
-
-  echo -n "blahblahblah00000000000000" > $SERVICE_FILE
-  assertFalse "service file contains more weird data" "serviceEverInService"
-
-  echo -n 124543234543 > $SERVICE_FILE
-  assertFalse "service file contains a date with no new line" "serviceEverInService"
-
-  echo 1361198947 > $SERVICE_FILE
-  assertTrue "service file contains a date" "serviceEverInService"
-
-  echo -n > $SERVICE_FILE
-  assertFalse "service file has no data" "serviceEverInService"
-
-  echo blah > $SERVICE_FILE
-  echo blah >> $SERVICE_FILE
-  assertFalse "service file contains multiple lines" "serviceEverInService"
-
-  echo blah > $SERVICE_FILE
-  echo blah >> $SERVICE_FILE
-  echo 124543234543 >> $SERVICE_FILE
-  assertFalse "service file contains multiple lines, one of which is a date" "serviceEverInService"
-
-  echo 124543234543 >> $SERVICE_FILE
-  echo 124543234548 >> $SERVICE_FILE
-  assertFalse "service file contains multiple dates" "serviceEverInService"
-}
-
 oneTimeSetUp() {
   # load include to test
   . ../lib/service.inc

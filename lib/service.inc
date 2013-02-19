@@ -10,10 +10,6 @@ function serviceUpdateTimeLastHealthy() {
   date +%s > ${SERVICE_FILE}
 }
 
-function serviceEverInService() {
-  cat $SERVICE_FILE | egrep "^[0-9]{10}$" &> /dev/null || return 1
-}
-
 function serviceMaybeOutOfService() {
   # been out of service for a little while. To early to terminate but we should
   # scale up as a precaution
