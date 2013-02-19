@@ -7,17 +7,17 @@ function testSystemIsEc2() {
 }
 
 function testSystemGetMeta() {
-
   if systemIsEc2; then
+    assertTrue "when there is no instance id, it should get one" "systemGetMeta instance-id"
+    INSTANCE_ID=`systemGetMeta instance-id`
     assertTrue "should get instance-id of ec2 instance" "systemGetMeta instance-id"
-    assertTrue "should have \$INSTANCE_ID set" "echo $INSTANCE_ID | egrep '^i-[0-9a-f]{8}$'"
-    assertTrue "should get instance-id from variable this time." "systemGetMeta instance-id"
-
-    assertTrue "should get ami-id of ec2 instance" "systemGetMeta ami-id"
-    assertTrue "should have \$AMI_ID set" "echo $AMI_ID | egrep '^ami-[0-9a-f]{8}$'"
-    assertTrue "should get ami-id from variable this time." "systemGetMeta instance-id"
+    assertTrue "should be an instance id" "echo $INSTANCE_ID | egrep '^i-[0-9a-f]{8}$'"
   else
-    assertFalse "should not get meta if not an ec2 instance" "systemGetMeta instance-id"
+    INSTANCE_ID="i-ffffffff"
+    assertEquals "should get the set \$INSTANCE_ID" "i-ffffffff" `systemGetMeta instance-id`
+
+    AMI_ID="ami-ffff"
+    assertEquals "should get the set \$AMI_ID" "ami-ffff" `systemGetMeta ami-id`
   fi
 }
 

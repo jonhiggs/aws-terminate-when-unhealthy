@@ -18,8 +18,6 @@ function systemIsEc2() {
 
 function systemGetMeta(){
   if [ -z $1 ]; then return 1; fi
-  if ! systemIsEc2; then return 1; fi
-
   detail=$1
 
   var_name=`echo $detail | tr '[:lower:]' '[:upper:]' | sed 's/-/_/g'`
@@ -28,9 +26,9 @@ function systemGetMeta(){
     return 0
   fi
 
+  if ! systemIsEc2; then return 1; fi
 
   url="http://169.254.169.254/latest/meta-data/$detail"
-
 
   value=`curl --connect-timeout 1 -s $url`
   if [ $? -ne 0 ]; then
@@ -39,14 +37,5 @@ function systemGetMeta(){
   fi
 
   eval ${var_name}=$value
-  echo ${!var_name}
-}
-
-function systemGetInstanceId(){
-  if [ -z $INSTANCE_ID ]; then
-    INSTANCE_ID=`curl --connect-timeout 1 -s http://169.254.169.254/latest/meta-data/instance-id`
-    if [ $? -ne 28 ]; then return 1; fi
-  fi
-  echo $INSTANCE_ID
-  return 0
+  #echo ${!var_name}
 }
