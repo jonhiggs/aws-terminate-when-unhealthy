@@ -2,7 +2,8 @@ function asPrimeData() {
   systemCheckVariableSet AS_TMP_FILE || return 1
   systemCheckVariableSet AS || return 1
   as-describe-auto-scaling-groups $AS > $AS_TMP_FILE
-  return 0
+
+  egrep '^No AutoScalingGroups found' < $AS_TMP_FILE && return 1
 }
 
 function asCountInstances() {
