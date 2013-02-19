@@ -37,5 +37,5 @@ function systemGetMeta(){
   fi
 
   eval ${var_name}=$value
-  #echo ${!var_name}
+  echo ${!var_name}
 }
