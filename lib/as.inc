@@ -3,9 +3,10 @@ function asPrimeData() {
   systemCheckVariableSet AS || return 1
   as-describe-auto-scaling-groups $AS > $AS_TMP_FILE
 
-  egrep '^No AutoScalingGroups found' < $AS_TMP_FILE &> /dev/null && \
-    systemInfo "Could not obtain details for AutoScalingGroup '$AS'." && \
+  if egrep '^No AutoScalingGroups found' $AS_TMP_FILE; then
+    systemInfo "Could not obtain details for AutoScalingGroup '$AS'."
     return 1
+  fi
 }
 
 function asMember() {
