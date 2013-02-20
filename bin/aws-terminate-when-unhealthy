@@ -16,7 +16,7 @@ ELB_TMP_FILE=`mktemp -t terminate_test_elb.XXXXX`
 AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXX`
 START_TIME=`date +%s`
 
-systemLock || exit 1
+systemCreateLock || exit 1
 
 if ! elbPrimeData; then systemCleanUp; exit 1; fi
 if ! asPrimeData; then systemCleanUp; exit 1; fi
@@ -40,6 +40,6 @@ while elbOutOfService; do
 done
 
 systemCleanUp
-systemUnlock
+systemRemoveUnlock
 
 # vim: ai ts=2 sw=2 et sts=2 ft=sh
