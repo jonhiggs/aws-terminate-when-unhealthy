@@ -27,11 +27,15 @@ function asAddInstance() {
   systemCheckVariableSet AS || return 1
 
   if ! asAllInstancesInElb; then
+    systemInfo "Increasing capacity of $AS to $((asCountInstances +1))."
     as-update-auto-scaling-group $AS --desired-capacity $((asCountInstances + 1))
+  else
+    systemInfo "Waiting for new instance to come online."
   fi
 }
 
 function asRemoveInstance() {
   systemCheckVariableSet INSTANCE_ID || return 1
+  systemInfo "Terminating instance '$INSTANCE_ID'."
   ec2-terminate-instance $INSTANCE_ID
 }
