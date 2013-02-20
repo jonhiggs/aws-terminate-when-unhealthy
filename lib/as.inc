@@ -15,7 +15,7 @@ function asCountInstances() {
 
 function asCountHealthyInstances() {
   systemCheckVariableSet AS_TMP_FILE || return 1
-  grep -c InService ${AS_TMP_FILE}
+  grep -c Healthy ${AS_TMP_FILE}
 }
 
 function asAllInstancesInElb() {

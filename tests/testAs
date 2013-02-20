@@ -5,7 +5,7 @@ function testAsCountInstances() {
 }
 
 function testAsCountHealthyInstances() {
-  assertEquals "count healthy instances" "4" `asCountHealthyInstances`
+  assertEquals "count healthy instances" "3" `asCountHealthyInstances`
 }
 
 function testAsAllInstancesInElb() {
@@ -14,7 +14,7 @@ function testAsAllInstancesInElb() {
   cat > $AS_TMP_FILE <<EOF
 AUTO-SCALING-GROUP  my-as-group  my-current-launch-config  eu-west-1a,eu-west-1c  whatever-this-is  2  8  4
 INSTANCE  i-aaaaaaaa  eu-west-1a  InService  Healthy  my-current-launch-config
-INSTANCE  i-bbbbbbbb  eu-west-1c  InService  Healthy  my-current-launch-config
+INSTANCE  i-bbbbbbbb  eu-west-1c  InService  Unhealthy  my-current-launch-config
 INSTANCE  i-cccccccc  eu-west-1c  InService  Healthy  my-current-launch-config
 INSTANCE  i-dddddddd  eu-west-1c  InService  Healthy  my-old-launch-config
 INSTANCE  i-ffffffff  eu-west-1c  InService  Healthy  my-old-launch-config
@@ -54,7 +54,7 @@ function setUp() {
   cat > $AS_TMP_FILE <<EOF
 AUTO-SCALING-GROUP  my-as-group  my-current-launch-config  eu-west-1a,eu-west-1c  whatever-this-is  2  8  4
 INSTANCE  i-aaaaaaaa  eu-west-1a  InService  Healthy  my-current-launch-config
-INSTANCE  i-bbbbbbbb  eu-west-1c  InService  Healthy  my-current-launch-config
+INSTANCE  i-bbbbbbbb  eu-west-1c  InService  Unhealthy  my-current-launch-config
 INSTANCE  i-cccccccc  eu-west-1c  InService  Healthy  my-current-launch-config
 INSTANCE  i-dddddddd  eu-west-1c  InService  Healthy  my-old-launch-config
 EOF
