@@ -48,12 +48,14 @@ function asAddInstance() {
   systemCheckVariableSet AS || return 1
   systemCheckVariableSet DRY_RUN || return 1
 
-  if ! asAllInstancesInElb; then
-    systemInfo "Increasing capacity of $AS to $((asCountInstances +1))."
-    $DRY_RUN || as-update-auto-scaling-group $AS --desired-capacity $((asCountInstances + 1))
-  else
+  if [ `asCountPendingInstances` -ne 0 ]; then
     systemInfo "Waiting for new instance to come online."
+    return 1
   fi
+
+  systemInfo "Increasing capacity of $AS to $((asCountInstances +1))."
+  $DRY_RUN || as-update-auto-scaling-group $AS --desired-capacity $((asCountInstances + 1))
+  return 0
 }
 
 function asRemoveInstance() {

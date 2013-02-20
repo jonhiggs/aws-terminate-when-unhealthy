@@ -53,6 +53,14 @@ function testAsContainsInstance() {
   assertFalse "test non-existant instance" "asContainsInstance i-00000000"
 }
 
+function testAsAddInstance() {
+  echo "INSTANCE  i-aaaaaaaa  eu-west-1a  InService  Healthy  my-current-launch-config" > $AS_TMP_FILE
+  assertTrue "Add another instance" "asAddInstance"
+
+  echo "INSTANCE  i-eeeeeeee  eu-west-1c  InService  Pending  my-old-launch-config" >> $AS_TMP_FILE
+  assertFalse "Add another instance while there is one pending" "asAddInstance"
+}
+
 function oneTimeSetUp() {
   # load include to test
   source ../lib/elb.inc
@@ -63,6 +71,7 @@ function oneTimeSetUp() {
 function setUp() {
   AS="my-as-group"
   ELB="FAKEELB"
+  DRY_RUN="true"
   AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXXXXX`
   ELB_TMP_FILE=`mktemp -t terminate_test_elb.XXXXXXXX`
 
