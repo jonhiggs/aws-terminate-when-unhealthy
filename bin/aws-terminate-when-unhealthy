@@ -21,7 +21,6 @@ if ! asPrimeData; then systemCleanUp; exit 1; fi
 if ! asMember; then systemCleanUp; exit 0; fi
 if ! elbMember; then systemCleanUp; exit 0; fi
 
-
 while elbOutOfService; do
   if serviceMaybeOutOfService; then
     asAddInstance
@@ -38,7 +37,6 @@ while elbOutOfService; do
   sleep `serviceRetryInterval`
 done
 
-serviceUpdateTimeLastHealthy
 systemCleanUp
 
 # vim: ai ts=2 sw=2 et sts=2 ft=sh
