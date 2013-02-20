@@ -18,3 +18,8 @@ function serviceOutOfService() {
   [ `date +%s` -gt ${oldest_valid_time} ]
   return $?
 }
+
+function serviceRetryInterval() {
+  systemCheckVariableSet OUT_OF_SERVICE_PRECAUTION_THRESHOLD || return 1
+  echo $(( $OUT_OF_SERVICE_PRECAUTION_THRESHOLD / 4 ))
+}

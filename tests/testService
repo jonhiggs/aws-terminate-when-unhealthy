@@ -6,6 +6,17 @@ function testServiceOutOfService() {
   assertTrue "service should be offline" "serviceOutOfService"
 }
 
+function testServiceRetryInterval() {
+  OUT_OF_SERVICE_PRECAUTION_THRESHOLD=8
+  assertEquals "Calculate the retry for $OUT_OF_SERVICE_PRECAUTION_THRESHOLD." "2" `serviceRetryInterval`
+
+  OUT_OF_SERVICE_PRECAUTION_THRESHOLD=300
+  assertEquals "Calculate the retry for $OUT_OF_SERVICE_PRECAUTION_THRESHOLD." "75" `serviceRetryInterval`
+
+  OUT_OF_SERVICE_PRECAUTION_THRESHOLD=1200
+  assertEquals "Calculate the retry for $OUT_OF_SERVICE_PRECAUTION_THRESHOLD." "300" `serviceRetryInterval`
+}
+
 function testServiceMaybeOutOfService() {
   assertFalse "everything is fine and dandy. do nothing" "serviceMaybeOutOfService"
 
@@ -18,11 +29,11 @@ function oneTimeSetUp() {
   source ../lib/service.inc
   source ../lib/system.inc
   SERVICE_FILE=`mktemp -t terminate_test_service.XXXXXXXX`
-  OUT_OF_SERVICE_THRESHOLD=300
-  OUT_OF_SERVICE_PRECAUTION_THRESHOLD=60
 }
 
 function setUp() {
+  OUT_OF_SERVICE_THRESHOLD=300
+  OUT_OF_SERVICE_PRECAUTION_THRESHOLD=60
   START_TIME=`date +%s`
 }
 
