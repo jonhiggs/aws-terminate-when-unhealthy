@@ -58,3 +58,14 @@ function asRemoveInstance() {
   systemInfo "Terminating instance '$INSTANCE_ID'."
   $DRY_RUN || ec2-terminate-instance $INSTANCE_ID
 }
+
+function asContainsInstance() {
+  systemCheckVariableSet AS_TMP_FILE || return 1
+  instance_id=$1
+  if [ -z $instance_id ]; then
+    systemError "You must provide asContainsInstance with an instance id."
+  fi
+
+  grep $instance_id $AS_TMP_FILE &> /dev/null
+  return $?
+}
