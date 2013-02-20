@@ -41,7 +41,7 @@ function systemGetMeta() {
 }
 
 function systemCleanUp() {
-  rm -f $ELB_TMP_FILE $AS_TMP_FILE
+  rm -f $ELB_TMP_FILE $AS_TMP_FILE $SERVICE_FILE
   return 0
 }
 
