@@ -30,13 +30,17 @@ function asCountInstances() {
 
 function asCountHealthyInstances() {
   systemCheckVariableSet AS_TMP_FILE || return 1
-  grep -c Healthy ${AS_TMP_FILE}
+  cat $AS_TMP_FILE | awk '{ print $5 }' | grep -c ^Healthy$
 }
 
-function asAllInstancesInElb() {
-  # There is a period where an instance is coming online but not yet listed in
-  # the ELB. This function determines if we have an instances coming online.
-  if [ `asCountInstances` -ne `elbCountInstances` ]; then return 1; fi
+function asCountPendingInstances() {
+  systemCheckVariableSet AS_TMP_FILE || return 1
+  cat $AS_TMP_FILE | awk '{ print $5 }' | grep -c ^Pending$
+}
+
+function asCountTerminatingInstances() {
+  systemCheckVariableSet AS_TMP_FILE || return 1
+  cat $AS_TMP_FILE | awk '{ print $5 }' | grep -c ^Terminating$
 }
 
 function asAddInstance() {
