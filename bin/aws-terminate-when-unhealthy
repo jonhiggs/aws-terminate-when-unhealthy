@@ -5,6 +5,7 @@ source `dirname $0`/../lib/service.inc
 source `dirname $0`/../lib/system.inc
 
 INFO='true'
+DRY_RUN='true'
 INSTANCE_ID=`systemGetMeta instance-id`
 ELB="test-lb"
 AS="test-as"
