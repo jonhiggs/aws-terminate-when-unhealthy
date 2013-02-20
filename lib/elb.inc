@@ -24,6 +24,7 @@ function elbOutOfService() {
   # it down just yet. That is the job of serviceOutOfService.
   systemCheckVariableSet INSTANCE_ID || return 1
   systemCheckVariableSet ELB_TMP_FILE || return 1
+  systemCheckVariableSet ELB || return 1
 
   if [ -z ${INSTANCE_ID} ]; then
     systemError "I don't know what the INSTANCE_ID is."
@@ -31,7 +32,13 @@ function elbOutOfService() {
   fi
 
   egrep "^INSTANCE_ID\ +$INSTANCE_ID\ +.*" ${ELB_TMP_FILE} | awk '{ print $3 }' | grep "^OutOfService$" &> /dev/null
-  return $? 
+
+  if [ $? -eq 0 ]; then
+    return 0
+  else
+    systemInfo "$INSTANCE_ID in $ELB is out of service."
+    return 1
+  fi
 }
 
 function elbContainsInstance() {
