@@ -108,7 +108,12 @@ function systemLockedTooLong() {
 
   systemCheckVariableSet START_TIME || return 1
 
-  lock_creation_time=`/usr/bin/stat -f '%m' /var/lock/terminate-when-unhealthy`
+  if [ `uname` == "Darwin" ]; then
+    lock_creation_time=`/usr/bin/stat -f '%m' /var/lock/terminate-when-unhealthy`
+  else
+    lock_creation_time=`stat --format=%Y /var/lock/terminate-when-unhealthy`
+  fi
+
   lock_max_age=$((30 * 60))
   lock_min_creation_time=$(( $START_TIME - $lock_max_age ))
 
