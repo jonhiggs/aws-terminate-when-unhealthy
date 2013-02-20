@@ -14,6 +14,7 @@ OUT_OF_SERVICE_THRESHOLD=1200                 # shut down instance if it's been 
 OUT_OF_SERVICE_PRECAUTION_THRESHOLD=300       # spin up another instance as a precaution if its been offline for 5 minutes.
 ELB_TMP_FILE=`mktemp -t terminate_test_elb.XXXXX`
 AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXX`
+START_TIME=`date +%s`
 
 if ! elbPrimeData; then systemCleanUp; exit 1; fi
 if ! asPrimeData; then systemCleanUp; exit 1; fi

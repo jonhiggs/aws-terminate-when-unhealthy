@@ -1,49 +1,16 @@
 #!/bin/bash
-function testServiceGetTimeLastHealthy() {
-  rm $SERVICE_FILE
-  assertEquals "Instance has never been healthy" "0" `serviceGetTimeLastHealthy`
-
-  touch $SERVICE_FILE
-  assertEquals "service file is empty" "0" `serviceGetTimeLastHealthy`
-
-  echo 60 > $SERVICE_FILE
-  assertEquals "Instance is healthy" "60" `serviceGetTimeLastHealthy`
-
-  echo "2000000" > $SERVICE_FILE
-  assertEquals "Instance is not healthy" "2000000" `serviceGetTimeLastHealthy`
-}
-
-function testServiceUpdateTimeLastHealthy() {
-  serviceUpdateTimeLastHealthy
-  assertTrue "attempt to update the time last in service" "egrep '[0-9]{10}' $SERVICE_FILE"
-}
-
 function testServiceOutOfService() {
-  rm $SERVICE_FILE
-  assertFalse "service file doesn't exist" "serviceOutOfService"
-
-  touch $SERVICE_FILE
-  assertFalse "service file is empty" "serviceOutOfService"
-
-  echo $((`date +%s` - $OUT_OF_SERVICE_THRESHOLD + 10)) > ${SERVICE_FILE}
   assertFalse "service should be online" "serviceOutOfService"
 
-  echo $((`date +%s` - $OUT_OF_SERVICE_THRESHOLD - 10)) > ${SERVICE_FILE}
+  START_TIME=$(($START_TIME - $OUT_OF_SERVICE_THRESHOLD - 10))
   assertTrue "service should be offline" "serviceOutOfService"
 }
 
 function testServiceMaybeOutOfService() {
-  rm $SERVICE_FILE
-  assertFalse "service file doesn't exist" "serviceMaybeOutOfService"
-
-  touch $SERVICE_FILE
-  assertFalse "service file is empty" "serviceMaybeOutOfService"
-
-  echo $((`date +%s` - $OUT_OF_SERVICE_PRECAUTION_THRESHOLD - 10)) > ${SERVICE_FILE}
-  assertTrue "should spin up another instance as a precaution" "serviceMaybeOutOfService"
-
-  echo $((`date +%s` - $OUT_OF_SERVICE_PRECAUTION_THRESHOLD + 10)) > ${SERVICE_FILE}
   assertFalse "everything is fine and dandy. do nothing" "serviceMaybeOutOfService"
+
+  START_TIME=$(($START_TIME - $OUT_OF_SERVICE_PRECAUTION_THRESHOLD - 10))
+  assertTrue "should spin up another instance as a precaution" "serviceMaybeOutOfService"
 }
 
 function oneTimeSetUp() {
@@ -53,6 +20,10 @@ function oneTimeSetUp() {
   SERVICE_FILE=`mktemp -t terminate_test_service.XXXXXXXX`
   OUT_OF_SERVICE_THRESHOLD=300
   OUT_OF_SERVICE_PRECAUTION_THRESHOLD=60
+}
+
+function setUp() {
+  START_TIME=`date +%s`
 }
 
 function oneTimeTearDown() {
