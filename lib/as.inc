@@ -48,14 +48,15 @@ function asAddInstance() {
   systemCheckVariableSet AS || return 1
   systemCheckVariableSet DRY_RUN || return 1
 
-  if [ `asCountPendingInstances` -ne 0 ]; then
-    systemInfo "Waiting for new instance to come online."
+  if [ -z $SPUN_NEW_INSTANCE ]; then
+    SPUN_NEW_INSTANCE='true'
+    systemInfo "Increasing capacity of $AS to $((asCountInstances +1))."
+    $DRY_RUN || as-update-auto-scaling-group $AS --desired-capacity $((asCountInstances + 1))
+    return 0
+  else
+    systemInfo "An instances has already been started. I will not start another."
     return 1
   fi
-
-  systemInfo "Increasing capacity of $AS to $((asCountInstances +1))."
-  $DRY_RUN || as-update-auto-scaling-group $AS --desired-capacity $((asCountInstances + 1))
-  return 0
 }
 
 function asRemoveInstance() {

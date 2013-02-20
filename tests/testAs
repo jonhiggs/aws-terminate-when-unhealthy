@@ -54,11 +54,9 @@ function testAsContainsInstance() {
 }
 
 function testAsAddInstance() {
-  echo "INSTANCE  i-aaaaaaaa  eu-west-1a  InService  Healthy  my-current-launch-config" > $AS_TMP_FILE
-  assertTrue "Add another instance" "asAddInstance"
-
-  echo "INSTANCE  i-eeeeeeee  eu-west-1c  InService  Pending  my-old-launch-config" >> $AS_TMP_FILE
-  assertFalse "Add another instance while there is one pending" "asAddInstance"
+  assertTrue "Add an instance" "asAddInstance"
+  SPUN_NEW_INSTANCE='true'
+  assertFalse "Add another instance" "asAddInstance"
 }
 
 function oneTimeSetUp() {
