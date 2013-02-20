@@ -1,5 +1,19 @@
 #!/bin/bash
 
+function testAsMember() {
+  INSTANCE_ID="i-aaaaaaaa"
+  assertTrue "instance is an healthy member of as" "elbMember"
+
+  INSTANCE_ID="i-bbbbbbbb"
+  assertTrue "instance is an unhealthy member of as" "elbMember"
+
+  INSTANCE_ID="i-ffffffff"
+  assertFalse "instance is not member of as" "elbMember"
+
+  INSTANCE_ID=""
+  assertFalse "instance doesn't know who it is" "elbMember"
+}
+
 function testAsCountInstances() {
   assertEquals "count instances" "4" `asCountInstances`
 }

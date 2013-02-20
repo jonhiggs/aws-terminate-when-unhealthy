@@ -8,6 +8,20 @@ function asPrimeData() {
     return 1
 }
 
+function asMember() {
+  systemCheckVariableSet INSTANCE_ID || return 1
+  systemCheckVariableSet AS_TMP_FILE || return 1
+  systemCheckVariableSet AS || return 1
+  egrep "^INSTANCE\ +$INSTANCE_ID\ +.*" ${AS_TMP_FILE} &> /dev/null
+
+  if [ $? -ne 0 ]; then
+    systemInfo "Instance '$INSTANCE_ID' is not in the AutoScalingGroup '$AS'."
+    return 1
+  fi
+
+  return 0
+}
+
 function asCountInstances() {
   systemCheckVariableSet AS_TMP_FILE || return 1
   grep -c ^INSTANCE ${AS_TMP_FILE}
