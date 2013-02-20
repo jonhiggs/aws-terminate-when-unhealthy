@@ -23,15 +23,18 @@ EOF
 }
 
 function testAsPrimeData() {
-  AS_TMP_FILE2=$AS_TMP_FILE
-  unset AS_TMP_FILE
-  assertFalse "return false if \$AS_TMP_FILE is unset" "asPrimeData"
-  AS_TMP_FILE=$AS_TMP_FILE2
+  AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXXXXX`
 
-  AS2=$AS
   unset AS
   assertFalse "return false if \$AS is unset" "asPrimeData"
-  AS=$AS2
+
+  AS="something_unknown"
+  assertFalse "return false if \$AS is unknown" "asPrimeData"
+  assertEquals "Not an autoscaling group" "No AutoScalingGroups found" "`cat $AS_TMP_FILE`"
+  rm -f $AS_TMP_FILE
+
+  unset AS_TMP_FILE
+  assertFalse "return false if \$AS_TMP_FILE is unset" "asPrimeData"
 }
 
 function oneTimeSetUp() {
@@ -39,14 +42,14 @@ function oneTimeSetUp() {
   source ../lib/elb.inc
   source ../lib/as.inc
   source ../lib/system.inc
-  AS="my-as-group"
-  AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXXXXX`
-
-  ELB="FAKEELB"
-  ELB_TMP_FILE=`mktemp -t terminate_test_elb.XXXXXXXX`
 }
 
 function setUp() {
+  AS="my-as-group"
+  ELB="FAKEELB"
+  AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXXXXX`
+  ELB_TMP_FILE=`mktemp -t terminate_test_elb.XXXXXXXX`
+
   # PRIME THE AS_TMP_FILE
   cat > $AS_TMP_FILE <<EOF
 AUTO-SCALING-GROUP  my-as-group  my-current-launch-config  eu-west-1a,eu-west-1c  whatever-this-is  2  8  4
@@ -65,8 +68,8 @@ INSTANCE_ID  i-dddddddd  InService  N/A  N/A
 EOF
 }
 
-function oneTimeTearDown() {
-  rm -f $AS_TMP_FILE
+function TearDown() {
+  rm -f $AS_TMP_FILE $ELB_TMP_FILE
 }
 
 # load and run shUnit2
