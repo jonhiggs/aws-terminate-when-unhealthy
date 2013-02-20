@@ -34,6 +34,7 @@ while elbOutOfService; do
     exit 0
   fi
 
+  systemInfo "$INSTANCE_ID is out of service. Sleeping to see what happens."
   sleep `serviceRetryInterval`
 done
 
