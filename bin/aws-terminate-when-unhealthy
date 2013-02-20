@@ -14,9 +14,8 @@ OUT_OF_SERVICE_PRECAUTION_THRESHOLD=300       # spin up another instance as a pr
 ELB_TMP_FILE=`mktemp -t terminate_test_elb.XXXXX`
 AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXX`
 
-elbPrimeData || ( systemCleanUp && exit 1 ) || exit 1
-asPrimeData || ( systemCleanUp && exit 1 ) || exit 1
-
+if ! elbPrimeData; then systemCleanUp; exit 1; fi
+if ! asPrimeData; then systemCleanUp; exit 1; fi
 if ! asMember; then systemCleanUp; exit 0; fi
 if ! elbMember; then systemCleanUp; exit 0; fi
 
