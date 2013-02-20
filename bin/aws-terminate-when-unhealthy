@@ -20,15 +20,18 @@ if ! asPrimeData; then systemCleanUp; exit 1; fi
 if ! asMember; then systemCleanUp; exit 0; fi
 if ! elbMember; then systemCleanUp; exit 0; fi
 
-if serviceMaybeOutOfService; then
-  asAddInstance
-fi
+if serviceMaybeOutOfService; then asAddInstance; fi
 
-if serviceOutOfService; then
-  asRemoveInstance
-else
-  serviceUpdateTimeLastHealthy
-fi
+while serviceMaybeOutOfService; do
+  if serviceOutOfService; then
+    asRemoveInstance
+    # send email
+    exit 0
+  fi
+  sleep 120
+done
 
+serviceUpdateTimeLastHealthy
 systemCleanUp
+
 # vim: ai ts=2 sw=2 et sts=2 ft=sh
