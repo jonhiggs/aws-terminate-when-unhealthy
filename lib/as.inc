@@ -54,7 +54,6 @@ function asAddInstance() {
     $DRY_RUN || as-update-auto-scaling-group $AS --desired-capacity $((asCountInstances + 1))
     return 0
   else
-    systemInfo "An instances has already been started. I will not start another."
     return 1
   fi
 }
