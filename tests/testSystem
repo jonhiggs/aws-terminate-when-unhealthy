@@ -43,6 +43,45 @@ function testSystemInfo() {
   assertTrue "Test an info message with INFO var" "systemInfo rar"
 }
 
+function testSystemCreateLock() {
+  touch /var/lock/aws-terminate-when-unhealthy
+  START_TIME=$(( `date +%s` + (60*60) ))
+  assertTrue "lock exists and is too old" "systemCreateLock"
+
+  touch /var/lock/aws-terminate-when-unhealthy
+  START_TIME=$(( `date +%s` + (20*60) ))
+  assertFalse "lock exists but isn't yet old" "systemCreateLock"
+
+  rm /var/lock/aws-terminate-when-unhealthy
+  assertTrue "lock doesn't exist" "systemCreateLock"
+}
+
+function testSystemRemoveLock() {
+  touch /var/lock/aws-terminate-when-unhealthy
+  assertTrue "Lock should exist" "[ -f /var/lock/aws-terminate-when-unhealthy ]"
+  systemRemoveLock
+  assertFalse "Lock shouldn't exist" "[ -f /var/lock/aws-terminate-when-unhealthy ]"
+}
+
+function testSystemLocked() {
+  assertFalse "Lock should not exist" "systemLocked"
+  touch /var/lock/aws-terminate-when-unhealthy
+  assertTrue "Lock should exist" "systemLocked"
+}
+
+function testSystemLockedTooLog() {
+  touch /var/lock/aws-terminate-when-unhealthy
+  START_TIME=`date +%s`
+  systemLockedTooLong
+  assertFalse "locked now" "systemLockedTooLong"
+
+  START_TIME=$(( `date +%s` + (20*60) ))
+  assertFalse "locked 20 minutes ago" "systemLockedTooLong"
+
+  START_TIME=$(( `date +%s` + (40*60) ))
+  assertTrue "locked 40 minutes ago" "systemLockedTooLong"
+}
+
 function testSystemCheckVariableSet() {
   assertFalse "Check for unset variable" "systemCheckVaribleSet BLAH"
   #assertTrue "Check error message" "systemCheckVariableSet BLAH | egrep 'You need to set'"
@@ -62,10 +101,19 @@ function oneTimeSetUp() {
   BLAH="whatever"
 }
 
-function SetUp() {
+function setUp() {
   unset IS_EC2
   unset INSTANCE_ID
   unset AMI_ID
+  START_TIME=`date +%s`
+}
+
+function tearDown() {
+  rm -f /var/lock/aws-terminate-when-unhealthy
+}
+
+oneTimeTearDown() {
+  rm -f $ELB_TMP_FILE $AS_TMP_FILE
 }
 
 # load and run shUnit2

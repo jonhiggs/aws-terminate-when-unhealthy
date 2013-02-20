@@ -41,7 +41,8 @@ function systemGetMeta() {
 }
 
 function systemCleanUp() {
-  rm -f $ELB_TMP_FILE $AS_TMP_FILE $SERVICE_FILE
+  rm -f $ELB_TMP_FILE $AS_TMP_FILE
+  systemRemoveLock
   return 0
 }
 
@@ -71,3 +72,46 @@ function systemCheckVariableSet() {
   return 0
 }
 
+function systemCreateLock() {
+  if systemLockedTooLong; then
+    systemInfo "Removing lock because it's been around too long."
+    #kill old process
+    systemRemoveLock
+  fi
+
+  if systemLocked; then
+    systemInfo "Cannot lock because there is a process still running."
+    return 1
+  fi
+
+  systemInfo "Lockfile Created."
+  touch /var/lock/aws-terminate-when-unhealthy
+}
+
+function systemRemoveLock() {
+  systemInfo "Lockfile Removed."
+  rm -f /var/lock/aws-terminate-when-unhealthy
+}
+
+function systemLocked() {
+  if [ -f /var/lock/aws-terminate-when-unhealthy ]; then
+    systemInfo "Script locked."
+    return 0
+  else
+    systemInfo "Script unlocked."
+    return 1
+  fi
+}
+
+function systemLockedTooLong() {
+  if [ ! systemLocked ]; then return 0; fi
+
+  systemCheckVariableSet START_TIME || return 1
+
+  lock_creation_time=`/usr/bin/stat -f '%m' /var/lock/terminate-when-unhealthy`
+  lock_max_age=$((30 * 60))
+  lock_min_creation_time=$(( $START_TIME - $lock_max_age ))
+
+  [ $lock_creation_time -lt $lock_min_creation_time ]
+  return $?
+}
