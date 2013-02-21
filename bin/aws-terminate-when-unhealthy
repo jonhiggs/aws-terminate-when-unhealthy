@@ -30,14 +30,12 @@ if ! elbMember; then systemCleanUp; exit 0; fi
 
 while elbOutOfService; do
   if serviceMaybeOutOfService; then
-    systemSendEmail "Booting instance" "Booting another instances as a precaution."
-    asAddInstance
+    asAddInstance && systemSendEmail "Booting instance" "Booting another instances as a precaution."
     sleep `serviceRetryInterval`
   fi
 
   if serviceOutOfService; then
-    systemSendEmail "Terminating Instance" "Destroying self as a precaution."
-    asRemoveInstance
+    asRemoveInstance && systemSendEmail "Terminating Instance" "Destroying self as a precaution."
     exit 0
   fi
 
