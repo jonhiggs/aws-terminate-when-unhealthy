@@ -73,9 +73,11 @@ function systemCheckVariableSet() {
 }
 
 function systemCreateLock() {
+  systemCheckVariableSet LOCK_FILE || return 1
+
   if systemLockedTooLong; then
     systemInfo "Removing lock because it's been around too long."
-    #kill old process
+    # TODO: kill old process
     systemRemoveLock
   fi
 
@@ -85,16 +87,21 @@ function systemCreateLock() {
   fi
 
   systemInfo "Lockfile Created."
-  touch /var/lock/aws-terminate-when-unhealthy
+  touch $LOCK_FILE
+  return 0
 }
 
 function systemRemoveLock() {
+  systemCheckVariableSet LOCK_FILE || return 1
+
   systemInfo "Lockfile Removed."
-  rm -f /var/lock/aws-terminate-when-unhealthy
+  rm -f $LOCK_FILE
 }
 
 function systemLocked() {
-  if [ -f /var/lock/aws-terminate-when-unhealthy ]; then
+  systemCheckVariableSet LOCK_FILE || return 1
+
+  if [ -f $LOCK_FILE ]; then
     systemInfo "Script locked."
     return 0
   else
@@ -104,17 +111,19 @@ function systemLocked() {
 }
 
 function systemLockedTooLong() {
-  if [ ! systemLocked ]; then return 0; fi
+  if ! systemLocked; then return 1; fi
 
   systemCheckVariableSet START_TIME || return 1
+  systemCheckVariableSet OUT_OF_SERVICE_THRESHOLD || return 1
+  systemCheckVariableSet LOCK_FILE || return 1
 
   if [ `uname` == "Darwin" ]; then
-    lock_creation_time=`/usr/bin/stat -f '%m' /var/lock/terminate-when-unhealthy`
+    lock_creation_time=`/usr/bin/stat -f '%m' $LOCK_FILE`
   else
-    lock_creation_time=`stat --format=%Y /var/lock/terminate-when-unhealthy`
+    lock_creation_time=`stat --format=%Y $LOCK_FILE`
   fi
 
-  lock_max_age=$((30 * 60))
+  lock_max_age=$(( $OUT_OF_SERVICE_THRESHOLD * 2 ))
   lock_min_creation_time=$(( $START_TIME - $lock_max_age ))
 
   [ $lock_creation_time -lt $lock_min_creation_time ]

@@ -44,42 +44,43 @@ function testSystemInfo() {
 }
 
 function testSystemCreateLock() {
-  touch /var/lock/aws-terminate-when-unhealthy
-  START_TIME=$(( `date +%s` + (60*60) ))
+  touch $LOCK_FILE
+  START_TIME=$(( `date +%s` + 3600 ))
   assertTrue "lock exists and is too old" "systemCreateLock"
 
-  touch /var/lock/aws-terminate-when-unhealthy
-  START_TIME=$(( `date +%s` + (20*60) ))
+  touch $LOCK_FILE
+  START_TIME=$(( `date +%s` + 600 ))
   assertFalse "lock exists but isn't yet old" "systemCreateLock"
 
-  rm /var/lock/aws-terminate-when-unhealthy
+  rm $LOCK_FILE
   assertTrue "lock doesn't exist" "systemCreateLock"
 }
 
 function testSystemRemoveLock() {
-  touch /var/lock/aws-terminate-when-unhealthy
-  assertTrue "Lock should exist" "[ -f /var/lock/aws-terminate-when-unhealthy ]"
+  touch $LOCK_FILE
+  assertTrue "Lock should exist" "[ -f $LOCK_FILE ]"
   systemRemoveLock
-  assertFalse "Lock shouldn't exist" "[ -f /var/lock/aws-terminate-when-unhealthy ]"
+  assertFalse "Lock shouldn't exist" "[ -f $LOCK_FILE ]"
 }
 
 function testSystemLocked() {
+  rm -f $LOCK_FILE
   assertFalse "Lock should not exist" "systemLocked"
-  touch /var/lock/aws-terminate-when-unhealthy
+  touch $LOCK_FILE
   assertTrue "Lock should exist" "systemLocked"
 }
 
 function testSystemLockedTooLog() {
-  touch /var/lock/aws-terminate-when-unhealthy
+  touch $LOCK_FILE
   START_TIME=`date +%s`
   systemLockedTooLong
   assertFalse "locked now" "systemLockedTooLong"
 
-  START_TIME=$(( `date +%s` + (20*60) ))
-  assertFalse "locked 20 minutes ago" "systemLockedTooLong"
+  START_TIME=$(( `date +%s` + $OUT_OF_SERVICE_THRESHOLD - 300 ))
+  assertFalse "locked less than threshold" "systemLockedTooLong"
 
-  START_TIME=$(( `date +%s` + (40*60) ))
-  assertTrue "locked 40 minutes ago" "systemLockedTooLong"
+  START_TIME=$(( `date +%s` + $OUT_OF_SERVICE_THRESHOLD + 300 ))
+  assertTrue "locked longer than threshold" "systemLockedTooLong"
 }
 
 function testSystemCheckVariableSet() {
@@ -97,6 +98,8 @@ function oneTimeSetUp() {
   source ../lib/system.inc
   ELB_TMP_FILE=`mktemp -t XXXXXX`
   AS_TMP_FILE=`mktemp -t XXXXXX`
+  LOCK_FILE=`mktemp -t XXXXXX`
+  OUT_OF_SERVICE_THRESHOLD=1800
   unset BLAH
   BLAH="whatever"
 }
@@ -113,7 +116,7 @@ function tearDown() {
 }
 
 oneTimeTearDown() {
-  rm -f $ELB_TMP_FILE $AS_TMP_FILE
+  rm -f $ELB_TMP_FILE $AS_TMP_FILE $LOCK_FILE
 }
 
 # load and run shUnit2
