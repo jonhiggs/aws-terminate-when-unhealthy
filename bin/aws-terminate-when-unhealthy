@@ -20,6 +20,7 @@ AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXX`
 LOCK_FILE="/var/lock/aws-terminate-when-unhealthy"
 START_TIME=`date +%s`
 
+systemBootComplete || exit 1
 systemCreateLock || exit 1
 
 if ! elbPrimeData; then systemCleanUp; exit 1; fi
