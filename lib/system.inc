@@ -79,7 +79,7 @@ function systemCleanUp() {
 
 function systemError() {
   if [ -z "$1" ]; then return 1; fi
-  echo "${@:2,1}"
+  echo "${@:2,1}" 1>&2;
   return 0
 }
 
