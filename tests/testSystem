@@ -115,7 +115,10 @@ function testSystemSendEmail() {
   EMAIL_RCPT="/dev/null"
   assertFalse "dont email without subject and content" "systemSendEmail"
   assertTrue "email subject and content" "systemSendEmail 'this is a subject' 'and this is content'"
+}
 
+function testSystemKillOldProcess() {
+  assertTrue "should write tests" "true"
 }
 
 function oneTimeSetUp() {

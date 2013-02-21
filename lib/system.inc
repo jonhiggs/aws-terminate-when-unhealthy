@@ -126,7 +126,7 @@ function systemCreateLock() {
 
   if systemLockedTooLong; then
     systemInfo "Removing lock because it's been around too long."
-    # TODO: kill old process
+    systemKillOldProcess
     systemRemoveLock
   fi
 
@@ -138,6 +138,14 @@ function systemCreateLock() {
   systemInfo "Lockfile Created."
   echo $$ > $PID_FILE
   return 0
+}
+
+function systemKillOldProcess() {
+  systemCheckVariableSet PID_FILE || return 1
+  
+  pid=`cat $PID_FILE`
+  kill $pid
+  return $?
 }
 
 function systemRemoveLock() {
