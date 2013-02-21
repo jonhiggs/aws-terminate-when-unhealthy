@@ -44,6 +44,8 @@ while elbOutOfService; do
   systemInfo "$INSTANCE_ID is out of service. Sleeping to see what happens."
 
   sleep `serviceRetryInterval`
+  elbPrimeData
+  asPrimeData
 done
 
 systemCleanUp
