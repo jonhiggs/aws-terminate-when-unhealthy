@@ -65,6 +65,18 @@ function systemInfo() {
   echo "`date` - $MSG" >> $INFO_FILE
   return 0
 }
+
+function systemDebug() {
+  systemCheckVariableSet DEBUG_FILE || return 1
+
+  if [ -z "$1" ]; then return 1; fi
+
+  if [ -z $DEBUG ]; then return 0; fi
+  if ! `$DEBUG`; then return 0; fi
+
+  MSG="${@:2,1}"
+  echo $MSG
+  echo "`date` - $MSG" >> $DEBUG_FILE
   return 0
 }
 
@@ -131,6 +143,12 @@ function systemLockedTooLong() {
 
   lock_max_age=$(( $OUT_OF_SERVICE_THRESHOLD * 2 ))
   lock_min_creation_time=$(( $START_TIME - $lock_max_age ))
+
+  systemDebug "Out Of Service Threshold: $OUT_OF_SERVICE_THRESHOLD"
+  systemDebug "Lock Max Age:             $(($START_TIME - $lock_max_age - $START_TIME))"
+  systemDebug "Lock Creation Time:       $(($lock_creation_time - $START_TIME))"
+  systemDebug "Lock Min Creation Time:   $(($lock_min_creation_time - $START_TIME + $lock_max_age))"
+  systemDebug "Start Time:               $(($START_TIME - $START_TIME + $lock_max_age))"
 
   [ $lock_creation_time -lt $lock_min_creation_time ]
   if [ $? -eq 0 ]; then

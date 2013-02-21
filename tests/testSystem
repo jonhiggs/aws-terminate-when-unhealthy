@@ -100,6 +100,8 @@ function oneTimeSetUp() {
   AS_TMP_FILE=`mktemp -t XXXXXX`
   LOCK_FILE=`mktemp -t XXXXXX`
   OUT_OF_SERVICE_THRESHOLD=1800
+  INFO_FILE="/tmp/out"
+  DEBUG_FILE="/tmp/out"
   unset BLAH
   BLAH="whatever"
 }
@@ -108,6 +110,7 @@ function setUp() {
   unset IS_EC2
   unset INSTANCE_ID
   unset AMI_ID
+  unset DEBUG
   START_TIME=`date +%s`
 }
 
