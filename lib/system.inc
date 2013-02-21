@@ -53,12 +53,18 @@ function systemError() {
 }
 
 function systemInfo() {
+  systemCheckVariableSet INFO_FILE || return 1
+
   if [ -z "$1" ]; then return 1; fi
 
   if [ -z $INFO ]; then return 0; fi
   if ! `$INFO`; then return 0; fi
 
-  echo "${@:2,1}"
+  MSG="${@:2,1}"
+  echo $MSG
+  echo "`date` - $MSG" >> $INFO_FILE
+  return 0
+}
   return 0
 }
 
@@ -127,5 +133,10 @@ function systemLockedTooLong() {
   lock_min_creation_time=$(( $START_TIME - $lock_max_age ))
 
   [ $lock_creation_time -lt $lock_min_creation_time ]
-  return $?
+  if [ $? -eq 0 ]; then
+    systemInfo "Lock is too old"
+    return 0
+  else
+    return 1
+  fi
 }

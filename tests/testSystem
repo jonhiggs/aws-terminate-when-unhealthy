@@ -45,11 +45,11 @@ function testSystemInfo() {
 
 function testSystemCreateLock() {
   touch $LOCK_FILE
-  START_TIME=$(( `date +%s` + 3600 ))
+  START_TIME=$(( `date +%s` + ( $OUT_OF_SERVICE_THRESHOLD * 2 ) + 300 ))
   assertTrue "lock exists and is too old" "systemCreateLock"
 
   touch $LOCK_FILE
-  START_TIME=$(( `date +%s` + 600 ))
+  START_TIME=$(( `date +%s` + ( $OUT_OF_SERVICE_THRESHOLD * 2 ) - 300 ))
   assertFalse "lock exists but isn't yet old" "systemCreateLock"
 
   rm $LOCK_FILE
@@ -76,10 +76,10 @@ function testSystemLockedTooLog() {
   systemLockedTooLong
   assertFalse "locked now" "systemLockedTooLong"
 
-  START_TIME=$(( `date +%s` + $OUT_OF_SERVICE_THRESHOLD - 300 ))
+  START_TIME=$(( `date +%s` + ( $OUT_OF_SERVICE_THRESHOLD * 2 ) - 300 ))
   assertFalse "locked less than threshold" "systemLockedTooLong"
 
-  START_TIME=$(( `date +%s` + $OUT_OF_SERVICE_THRESHOLD + 300 ))
+  START_TIME=$(( `date +%s` + ( $OUT_OF_SERVICE_THRESHOLD * 2 ) + 300 ))
   assertTrue "locked longer than threshold" "systemLockedTooLong"
 }
 
