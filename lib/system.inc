@@ -122,7 +122,7 @@ function systemCheckVariableSet() {
 }
 
 function systemCreateLock() {
-  systemCheckVariableSet LOCK_FILE || return 1
+  systemCheckVariableSet PID_FILE || return 1
 
   if systemLockedTooLong; then
     systemInfo "Removing lock because it's been around too long."
@@ -136,28 +136,28 @@ function systemCreateLock() {
   fi
 
   systemInfo "Lockfile Created."
-  touch $LOCK_FILE
+  echo $$ > $PID_FILE
   return 0
 }
 
 function systemRemoveLock() {
-  systemCheckVariableSet LOCK_FILE || return 1
+  systemCheckVariableSet PID_FILE || return 1
 
-  rm -f $LOCK_FILE
+  rm -f $PID_FILE
 
-  if [ -f $LOCK_FILE ]; then
-    systemError "Failed to remove lock file '$LOCK_FILE' for an unknown reason."
+  if [ -f $PID_FILE ]; then
+    systemError "Failed to remove lock file '$PID_FILE' for an unknown reason."
     return 1
   else
-    systemInfo "Lockfile '$LOCK_FILE' Removed."
+    systemInfo "Lockfile '$PID_FILE' Removed."
     return 0
   fi
 }
 
 function systemLocked() {
-  systemCheckVariableSet LOCK_FILE || return 1
+  systemCheckVariableSet PID_FILE || return 1
 
-  if [ -f $LOCK_FILE ]; then
+  if [ -f $PID_FILE ]; then
     systemInfo "Script locked."
     return 0
   else
@@ -171,12 +171,12 @@ function systemLockedTooLong() {
 
   systemCheckVariableSet START_TIME || return 1
   systemCheckVariableSet OUT_OF_SERVICE_THRESHOLD || return 1
-  systemCheckVariableSet LOCK_FILE || return 1
+  systemCheckVariableSet PID_FILE || return 1
 
   if [ `uname` == "Darwin" ]; then
-    lock_creation_time=`/usr/bin/stat -f '%m' $LOCK_FILE`
+    lock_creation_time=`/usr/bin/stat -f '%m' $PID_FILE`
   else
-    lock_creation_time=`stat --format=%Y $LOCK_FILE`
+    lock_creation_time=`stat --format=%Y $PID_FILE`
   fi
 
   lock_max_age=$(( $OUT_OF_SERVICE_THRESHOLD * 2 ))

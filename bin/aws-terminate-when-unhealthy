@@ -17,7 +17,7 @@ OUT_OF_SERVICE_PRECAUTION_THRESHOLD=10      # spin up another instance as a prec
 BOOTED="true"                               # command to determine if instance is booted.
 ELB_TMP_FILE=`mktemp -t terminate_test_elb.XXXXX`
 AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXX`
-LOCK_FILE="/var/lock/aws-terminate-when-unhealthy"
+PID_FILE="/var/run/aws-terminate-when-unhealthy"
 START_TIME=`date +%s`
 
 systemBootComplete || exit 1

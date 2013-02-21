@@ -44,33 +44,33 @@ function testSystemInfo() {
 }
 
 function testSystemCreateLock() {
-  touch $LOCK_FILE
+  touch $PID_FILE
   START_TIME=$(( `date +%s` + ( $OUT_OF_SERVICE_THRESHOLD * 2 ) + 300 ))
   assertTrue "lock exists and is too old" "systemCreateLock"
 
-  touch $LOCK_FILE
+  touch $PID_FILE
   START_TIME=$(( `date +%s` + ( $OUT_OF_SERVICE_THRESHOLD * 2 ) - 300 ))
   assertFalse "lock exists but isn't yet old" "systemCreateLock"
 
-  rm $LOCK_FILE
+  rm $PID_FILE
   assertTrue "lock doesn't exist" "systemCreateLock"
 }
 
 function testSystemRemoveLock() {
-  touch $LOCK_FILE
+  touch $PID_FILE
   assertTrue "Lock should exist" "systemRemoveLock"
   assertTrue "Lock shouldn't exist" "systemRemoveLock"
 }
 
 function testSystemLocked() {
-  rm -f $LOCK_FILE
+  rm -f $PID_FILE
   assertFalse "Lock should not exist" "systemLocked"
-  touch $LOCK_FILE
+  touch $PID_FILE
   assertTrue "Lock should exist" "systemLocked"
 }
 
 function testSystemLockedTooLog() {
-  touch $LOCK_FILE
+  touch $PID_FILE
   START_TIME=`date +%s`
   systemLockedTooLong
   assertFalse "locked now" "systemLockedTooLong"
@@ -123,7 +123,7 @@ function oneTimeSetUp() {
   source ../lib/system.inc
   ELB_TMP_FILE=`mktemp -t XXXXXX`
   AS_TMP_FILE=`mktemp -t XXXXXX`
-  LOCK_FILE=`mktemp -t XXXXXX`
+  PID_FILE=`mktemp -t XXXXXX`
   OUT_OF_SERVICE_THRESHOLD=1800
   INFO_FILE="/tmp/out"
   DEBUG_FILE="/tmp/out"
@@ -146,7 +146,7 @@ function tearDown() {
 }
 
 oneTimeTearDown() {
-  rm -f $ELB_TMP_FILE $AS_TMP_FILE $LOCK_FILE
+  rm -f $ELB_TMP_FILE $AS_TMP_FILE $PID_FILE
 }
 
 # load and run shUnit2
