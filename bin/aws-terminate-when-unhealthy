@@ -5,11 +5,13 @@ source `dirname $0`/../lib/service.inc
 source `dirname $0`/../lib/system.inc
 
 INFO='true'
+INFO_FILE='/dev/null'
+DEBUG='true'
+DEBUG_FILE='/dev/null'
 DRY_RUN='true'
 INSTANCE_ID=`systemGetMeta instance-id`
 ELB="test-lb"
 AS="test-as"
-SERVICE_FILE="/tmp/last_in_service"
 OUT_OF_SERVICE_THRESHOLD=60                 # shut down instance if it's been out of service for over 60 seconds.
 OUT_OF_SERVICE_PRECAUTION_THRESHOLD=10      # spin up another instance as a precaution if its been offline for 10 seconds.
 ELB_TMP_FILE=`mktemp -t terminate_test_elb.XXXXX`
