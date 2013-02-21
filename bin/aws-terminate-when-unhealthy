@@ -35,7 +35,7 @@ while elbOutOfService; do
   fi
 
   if serviceOutOfService; then
-    asRemoveInstance && systemSendEmail "Terminating Instance" "Destroying self as a precaution."
+    asRemoveInstance && systemSendEmail "Terminating Instance" "Time to self destruct."
     exit 0
   fi
 
