@@ -143,8 +143,15 @@ function systemCreateLock() {
 function systemRemoveLock() {
   systemCheckVariableSet LOCK_FILE || return 1
 
-  systemInfo "Lockfile Removed."
   rm -f $LOCK_FILE
+
+  if [ -f $LOCK_FILE ]; then
+    systemError "Failed to remove lock file '$LOCK_FILE' for an unknown reason."
+    return 1
+  else
+    systemInfo "Lockfile '$LOCK_FILE' Removed."
+    return 0
+  fi
 }
 
 function systemLocked() {

@@ -58,9 +58,8 @@ function testSystemCreateLock() {
 
 function testSystemRemoveLock() {
   touch $LOCK_FILE
-  assertTrue "Lock should exist" "[ -f $LOCK_FILE ]"
-  systemRemoveLock
-  assertFalse "Lock shouldn't exist" "[ -f $LOCK_FILE ]"
+  assertTrue "Lock should exist" "systemRemoveLock"
+  assertTrue "Lock shouldn't exist" "systemRemoveLock"
 }
 
 function testSystemLocked() {
@@ -113,7 +112,6 @@ function testSystemSendEmail() {
   unset EMAIL_RCPT
   assertTrue "don't send email if no rcpt is set." "systemSendEmail"
 
-  INFO="true"
   EMAIL_RCPT="/dev/null"
   assertFalse "dont email without subject and content" "systemSendEmail"
   assertTrue "email subject and content" "systemSendEmail 'this is a subject' 'and this is content'"
