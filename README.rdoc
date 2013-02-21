@@ -5,42 +5,19 @@ to the ELB healthcheck but remain healthy according to the autoscaler. This
 script is designed to detect if an instance is in that state and terminate it.
 
 = settings
-$AS                                   The AutoScalingGroup.
-
-$AS_TMP_FILE                          Temp file used to cache the autoscaler
-                                      details.
-
-$BOOTED                               Contains a script that returns true once
-                                      the instance is considered fully booted.
-
-$DEBUG                                Show debug messages.
-
-$DEBUG_FILE                           A file where debug messages with be
-                                      written.
-
-$DRY_RUN                              Don't send emails or start or stop
-                                      instances.
-
-$ELB                                  The Elastic Load Balancer.
-
-$ELB_TMP_FILE                         Temp file used to cache the elb details.
-
-$EMAIL_RCPT                           Where to send scaling emails.
-
-$INFO                                 Show info messages.
-
-$INFO_FILE                            A file where info messages will be
-                                      written.
-
-$INSTANCE_ID                          Instance ID of server to act upon.
-
-$OUT_OF_SERVICE_PRECAUTION_THRESHOLD  How long to wait before spinning up
-                                      another instance as a precaution in case
-                                      this instances has failed.
-
-$OUT_OF_SERVICE_THRESHOLD             How long to wait before giving up on this
-                                      istance becoming good.
-
-$PID_FILE                             Contains the PID of this script.
-
-$START_TIME                           Time since script began.
++$AS+ The AutoScalingGroup.
++$AS_TMP_FILE+ Temp file used to cache the autoscaler details.
++$BOOTED+ Contains a script that returns true once the instance is considered fully booted.  
++$DEBUG+ Show debug messages.  
++$DEBUG_FILE+ A file where debug messages with be written.
++$DRY_RUN+ Don't send emails or start or stop instances.  
++$ELB+ The Elastic Load Balancer.
++$ELB_TMP_FILE+ Temp file used to cache the elb details.
++$EMAIL_RCPT+ Where to send scaling emails.
++$INFO+ Show info messages.
++$INFO_FILE+ A file where info messages will be written.
++$INSTANCE_ID+ Instance ID of server to act upon.
++$OUT_OF_SERVICE_PRECAUTION_THRESHOLD+ How long to wait before spinning up another instance as a precaution in case this instances has failed.
++$OUT_OF_SERVICE_THRESHOLD+ How long to wait before giving up on this istance becoming good.  
++$PID_FILE+ Contains the PID of this script.  
++$START_TIME+ Time since script began.
