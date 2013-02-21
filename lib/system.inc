@@ -30,7 +30,7 @@ function systemSendEmail() {
   systemDebug "Subject: $subject"
   systemDebug "Content: $content"
 
-  $DRY_RUN || mail -s "$subject" $rcpt < $content_file
+  $DRY_RUN || mail -s "$subject" $EMAIL_RCPT < $content_file
   rm $content_file
 }
 
