@@ -19,6 +19,7 @@ ELB_TMP_FILE=`mktemp -t terminate_test_elb.XXXXX`
 AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXX`
 PID_FILE="/var/run/aws-terminate-when-unhealthy"
 START_TIME=`date +%s`
+EMAIL_RCPT="/dev/null"
 
 systemBootComplete || exit 1
 systemCreateLock || exit 1
