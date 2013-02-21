@@ -9,7 +9,7 @@ function systemSendEmail() {
     return 0
   fi
 
-  if [ -z $2 ]; then
+  if [ -z "$2" ]; then
     systemInfo "Not sending email because we don't have content."
     return 1
   fi
