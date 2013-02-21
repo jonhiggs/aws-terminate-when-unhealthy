@@ -94,14 +94,30 @@ function testSystemCheckVariableSet() {
 }
 
 function testSystemBootComplete() {
-  INFO="true"
-  DEBUG="true"
-  
   BOOTED="true"
   assertTrue "System should appear booted" "systemBootComplete"
 
   BOOTED="false"
   assertFalse "System not appear booted" "systemBootComplete"
+}
+
+function testSystemEmailEnabled() {
+  unset EMAIL_RCPT
+  assertFalse "don't send email if no rcpt is set." "systemEmailEnabled"
+
+  EMAIL_RCPT="/dev/null"
+  assertTrue "send email if we have an address" "systemEmailEnabled"
+}
+
+function testSystemSendEmail() {
+  unset EMAIL_RCPT
+  assertTrue "don't send email if no rcpt is set." "systemSendEmail"
+
+  INFO="true"
+  EMAIL_RCPT="/dev/null"
+  assertFalse "dont email without subject and content" "systemSendEmail"
+  assertTrue "email subject and content" "systemSendEmail 'this is a subject' 'and this is content'"
+
 }
 
 function oneTimeSetUp() {
@@ -122,6 +138,8 @@ function setUp() {
   unset INSTANCE_ID
   unset AMI_ID
   unset DEBUG
+  unset INFO
+  unset EMAIL_RCPT
   START_TIME=`date +%s`
 }
 

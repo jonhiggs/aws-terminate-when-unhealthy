@@ -1,6 +1,37 @@
+function systemEmailEnabled() {
+  ! [ -z $EMAIL_RCPT ]
+  return $?
+}
+
 function systemSendEmail() {
-  systemError "systemSendEmail is not yet implemented" 
-  return 1
+  if ! systemEmailEnabled; then
+    systemInfo "Not sending email because we don't have an address."
+    return 0
+  fi
+
+  if [ -z $2 ]; then
+    systemInfo "Not sending email because we don't have content."
+    return 1
+  fi
+
+  subject="aws-terminate-when-unhealthy: $1"
+
+  content_header="Instance '$INSTANCE_ID' has been out of service for $((`date +%s` - $START_TIME)) seconds."
+  content=$2
+
+  content_file=`mktemp -t XXXXX`
+  echo $content_header > $content_file
+  echo $content >> $content_file
+
+  systemInfo "Sending email - $1"
+
+  systemDebug "Emailing:"
+  systemDebug "To: $EMAIL_RCPT"
+  systemDebug "Subject: $subject"
+  systemDebug "Content: $content"
+
+  $DRY_RUN || mail -s "$subject" $rcpt < $content_file
+  rm $content_file
 }
 
 function systemIsEc2() {
