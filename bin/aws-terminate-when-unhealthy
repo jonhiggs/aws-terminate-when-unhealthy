@@ -14,6 +14,7 @@ ELB="test-lb"
 AS="test-as"
 OUT_OF_SERVICE_THRESHOLD=60                 # shut down instance if it's been out of service for over 60 seconds.
 OUT_OF_SERVICE_PRECAUTION_THRESHOLD=10      # spin up another instance as a precaution if its been offline for 10 seconds.
+BOOTED="true"                               # command to determine if instance is booted.
 ELB_TMP_FILE=`mktemp -t terminate_test_elb.XXXXX`
 AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXX`
 LOCK_FILE="/var/lock/aws-terminate-when-unhealthy"

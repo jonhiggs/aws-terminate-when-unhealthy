@@ -158,3 +158,9 @@ function systemLockedTooLong() {
     return 1
   fi
 }
+
+function systemBootComplete() {
+  systemCheckVariableSet BOOTED || return 1
+  $BOOTED
+  return $?
+}
