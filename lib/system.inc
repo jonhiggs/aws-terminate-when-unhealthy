@@ -144,7 +144,7 @@ function systemKillOldProcess() {
   systemCheckVariableSet PID_FILE || return 1
   
   pid=`cat $PID_FILE`
-  kill $pid
+  kill $pid 2> /dev/null
   return $?
 }
 
