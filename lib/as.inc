@@ -28,21 +28,6 @@ function asCountInstances() {
   grep -c ^INSTANCE ${AS_TMP_FILE}
 }
 
-function asCountHealthyInstances() {
-  systemCheckVariableSet AS_TMP_FILE || return 1
-  cat $AS_TMP_FILE | awk '{ print $5 }' | grep -c ^Healthy$
-}
-
-function asCountPendingInstances() {
-  systemCheckVariableSet AS_TMP_FILE || return 1
-  cat $AS_TMP_FILE | awk '{ print $5 }' | grep -c ^Pending$
-}
-
-function asCountTerminatingInstances() {
-  systemCheckVariableSet AS_TMP_FILE || return 1
-  cat $AS_TMP_FILE | awk '{ print $5 }' | grep -c ^Terminating$
-}
-
 function asAddInstance() {
   # only add instances if we aren't waiting for one to come online.
   systemCheckVariableSet AS || return 1
@@ -63,15 +48,4 @@ function asRemoveInstance() {
   systemCheckVariableSet DRY_RUN || return 1
   systemInfo "Terminating instance '$INSTANCE_ID'."
   $DRY_RUN || ec2-terminate-instance $INSTANCE_ID
-}
-
-function asContainsInstance() {
-  systemCheckVariableSet AS_TMP_FILE || return 1
-  instance_id=$1
-  if [ -z $instance_id ]; then
-    systemError "You must provide asContainsInstance with an instance id."
-  fi
-
-  grep $instance_id $AS_TMP_FILE &> /dev/null
-  return $?
 }

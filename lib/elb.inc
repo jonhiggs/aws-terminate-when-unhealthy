@@ -41,18 +41,6 @@ function elbOutOfService() {
   fi
 }
 
-function elbContainsInstance() {
-  systemCheckVariableSet ELB_TMP_FILE || return 1
-  instance_id=$1
-  if [ -z $instance_id ]; then
-    systemError "You must provide asContainsInstance with an instance id."
-    return 1
-  fi
-
-  grep $instance_id $ELB_TMP_FILE &> /dev/null
-  return $?
-}
-
 function elbCountInstances() {
   systemCheckVariableSet ELB_TMP_FILE || return 1
   wc -l < ${ELB_TMP_FILE}

@@ -18,18 +18,6 @@ function testAsCountInstances() {
   assertEquals "count instances" "6" `asCountInstances`
 }
 
-function testAsCountHealthyInstances() {
-  assertEquals "count healthy instances" "3" `asCountHealthyInstances`
-}
-
-function testAsCountPendingInstances() {
-  assertEquals "count pending instances" "1" `asCountPendingInstances`
-}
-
-function testAsCountTerminatingInstances() {
-  assertEquals "count terminating instances" "1" `asCountTerminatingInstances`
-}
-
 function testAsPrimeData() {
   AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXXXXX`
 
@@ -43,14 +31,6 @@ function testAsPrimeData() {
 
   unset AS_TMP_FILE
   assertFalse "return false if \$AS_TMP_FILE is unset" "asPrimeData"
-}
-
-function testAsContainsInstance() {
-  assertTrue "test healthy instance" "asContainsInstance i-aaaaaaaa"
-  assertTrue "test unhealthy instance" "asContainsInstance i-bbbbbbbb"
-  assertTrue "test pending instance" "asContainsInstance i-eeeeeeee"
-  assertTrue "test terminating instance" "asContainsInstance i-ffffffff"
-  assertFalse "test non-existant instance" "asContainsInstance i-00000000"
 }
 
 function testAsAddInstance() {

@@ -40,12 +40,6 @@ function testElbPrimeData() {
   ELB=$ELB2
 }
 
-function testElbContainsInstance() {
-  assertTrue "test InService instance" "elbContainsInstance i-aaaaaaaa"
-  assertTrue "test OutOfService instance" "elbContainsInstance i-bbbbbbbb"
-  assertFalse "test non-existant instance" "elbContainsInstance i-00000000"
-}
-
 function testElbCountInstances() {
   assertEquals "count instances" "4" `elbCountInstances`
 }
