@@ -34,9 +34,10 @@ function elbOutOfService() {
   egrep "^INSTANCE_ID\ +$INSTANCE_ID\ +.*" ${ELB_TMP_FILE} | awk '{ print $3 }' | grep "^OutOfService$" &> /dev/null
 
   if [ $? -eq 0 ]; then
+    systemInfo "$INSTANCE_ID in $ELB is OutOfService."
     return 0
   else
-    systemInfo "$INSTANCE_ID in $ELB is out of service."
+    systemInfo "$INSTANCE_ID in $ELB is InService."
     return 1
   fi
 }
