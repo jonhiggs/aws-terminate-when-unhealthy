@@ -142,6 +142,9 @@ function systemCreateLock() {
 
 function systemKillOldProcess() {
   systemCheckVariableSet PID_FILE || return 1
+  # TODO: this should not be allowed to kill a random process if the pid file
+  # exists and it contains an random pid.
+
   systemSendEmail "Killing hung process" "The pid file is too old. Killing the process listed within and continuing."
 
   pid=`cat $PID_FILE`
