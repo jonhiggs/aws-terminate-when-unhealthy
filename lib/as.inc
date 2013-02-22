@@ -47,5 +47,5 @@ function asRemoveInstance() {
   systemCheckVariableSet INSTANCE_ID || return 1
   systemCheckVariableSet DRY_RUN || return 1
   systemInfo "Terminating instance '$INSTANCE_ID'."
-  $DRY_RUN || ec2-terminate-instance $INSTANCE_ID
+  $DRY_RUN || poweroff
 }
