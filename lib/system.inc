@@ -142,7 +142,8 @@ function systemCreateLock() {
 
 function systemKillOldProcess() {
   systemCheckVariableSet PID_FILE || return 1
-  
+  systemSendEmail "Killing hung process" "The pid file is too old. Killing the process listed within and continuing."
+
   pid=`cat $PID_FILE`
   kill $pid 2> /dev/null
   return $?
