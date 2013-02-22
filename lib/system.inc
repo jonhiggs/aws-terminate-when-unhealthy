@@ -114,7 +114,7 @@ function systemDebug() {
 function systemCheckVariableSet() {
   if [ -z "$1" ]; then return 2; fi
 
-  if [ -z ${!1} ]; then
+  if [ -z "${!1}" ]; then
     systemError "You need to set the '$1' variable."
     return 1
   fi
