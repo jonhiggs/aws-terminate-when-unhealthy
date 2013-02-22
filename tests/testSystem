@@ -90,6 +90,9 @@ function testSystemCheckVariableSet() {
   assertTrue "Check for set single-word variable" "systemCheckVariableSet BLAH"
   BLAH="now i'm set"
   assertTrue "Check for set multi-word variable" "systemCheckVariableSet BLAH"
+
+  BLAH="[ -f \"$0\" ]"
+  assertTrue "Check when contains a function." "systemCheckVariableSet BLAH"
 }
 
 function testSystemBootComplete() {
@@ -98,6 +101,12 @@ function testSystemBootComplete() {
 
   BOOTED="false"
   assertFalse "System not appear booted" "systemBootComplete"
+
+  BOOTED="[ -f $0 ]"
+  assertTrue "check if file exists" "systemBootComplete"
+
+  BOOTED="[ -f /tmp/yabadabbadoo ]"
+  assertFalse "check if non-existant file exists" "systemBootComplete"
 }
 
 function testSystemEmailEnabled() {
