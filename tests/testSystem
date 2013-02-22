@@ -85,7 +85,7 @@ function testSystemLockedTooLog() {
 function testSystemCheckVariableSet() {
   assertFalse "Check for unset variable" "systemCheckVaribleSet BLAH"
   #assertTrue "Check error message" "systemCheckVariableSet BLAH | egrep 'You need to set'"
-  
+
   BLAH="single"
   assertTrue "Check for set single-word variable" "systemCheckVariableSet BLAH"
   BLAH="now i'm set"
