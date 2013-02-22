@@ -9,13 +9,13 @@ $AS The AutoScalingGroup.
 
 $AS_TMP_FILE Temp file used to cache the autoscaler details.
 
-$BOOTED Contains a script that returns true once the instance is considered fully booted.  
+$BOOTED Contains a script that returns true once the instance is considered fully booted.
 
-$DEBUG Show debug messages.  
+$DEBUG Show debug messages.
 
 $DEBUG_FILE A file where debug messages with be written.
 
-$DRY_RUN Don't send emails or start or stop instances.  
+$DRY_RUN Don't send emails or start or stop instances.
 
 $ELB The Elastic Load Balancer.
 
@@ -31,8 +31,8 @@ $INSTANCE_ID Instance ID of server to act upon.
 
 $OUT_OF_SERVICE_PRECAUTION_THRESHOLD How long to wait before spinning up another instance as a precaution in case this instances has failed.
 
-$OUT_OF_SERVICE_THRESHOLD How long to wait before giving up on this istance becoming good.  
+$OUT_OF_SERVICE_THRESHOLD How long to wait before giving up on this istance becoming good.
 
-$PID_FILE Contains the PID of this script.  
+$PID_FILE Contains the PID of this script.
 
 $START_TIME Time since script began.
