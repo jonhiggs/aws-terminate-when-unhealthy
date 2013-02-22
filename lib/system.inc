@@ -211,6 +211,11 @@ function systemLockedTooLong() {
 
 function systemBootComplete() {
   systemCheckVariableSet BOOTED || return 1
-  $BOOTED
-  return $?
+
+  if $BOOTED; then
+    return 0
+  else
+    systemInfo "Boot has not yet completed."
+    return 1
+  fi
 }
