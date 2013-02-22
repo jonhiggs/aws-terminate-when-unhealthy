@@ -15,6 +15,8 @@ function serviceOutOfService() {
   systemCheckVariableSet OUT_OF_SERVICE_PRECAUTION_THRESHOLD || return 1
   oldest_valid_time=$(($START_TIME + ${OUT_OF_SERVICE_THRESHOLD} ))
 
+  systemInfo "Service been down for $((`date +%s` - $START_TIME)) seconds."
+
   [ `date +%s` -gt ${oldest_valid_time} ]
   return $?
 }
