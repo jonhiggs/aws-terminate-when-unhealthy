@@ -30,15 +30,12 @@ if ! asMember; then systemCleanUp; exit 0; fi
 if ! elbMember; then systemCleanUp; exit 0; fi
 
 while elbOutOfService; do
-  if serviceMaybeOutOfService; then
-    asAddInstance && systemSendEmail "Booting instance" "Booting another instances as a precaution."
-    sleep `serviceRetryInterval`
-  fi
-
   if serviceOutOfService; then
     asRemoveInstance && systemSendEmail "Terminating Instance" "Time to self destruct."
     systemCleanUp
     exit 0
+  elif serviceMaybeOutOfService; then
+    asAddInstance && systemSendEmail "Booting instance" "Booting another instances as a precaution."
   fi
 
   systemInfo "$INSTANCE_ID is out of service. Sleeping to see what happens."
