@@ -20,6 +20,7 @@ AS_TMP_FILE=`mktemp -t terminate_test_as.XXXXX`
 PID_FILE="/var/run/aws-terminate-when-unhealthy"
 START_TIME=`date +%s`
 EMAIL_RCPT="/dev/null"
+RECOVER_COMMAND="true"
 
 if ! systemBootComplete; then systemCleanUp; exit 1; fi
 if ! systemCreateLock; then systemCleanUp; exit 1; fi
@@ -34,6 +35,7 @@ while elbOutOfService; do
     systemCleanUp
     exit 0
   elif serviceMaybeOutOfService; then
+    systemRecover
     asAddInstance && systemSendEmail "Booting instance" "Booting another instances as a precaution."
   fi
 

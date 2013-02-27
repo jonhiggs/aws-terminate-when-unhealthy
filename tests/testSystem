@@ -130,6 +130,14 @@ function testSystemKillOldProcess() {
   assertTrue "should write tests" "true"
 }
 
+function testSystemRecover() {
+  RECOVER_COMMAND="true"
+  assertTrue "test working recover command" "systemRecover"
+
+  RECOVER_COMMAND="false"
+  assertFalse "test failed recover command" "systemRecover"
+}
+
 function oneTimeSetUp() {
   # load include to test
   source ../lib/system.inc

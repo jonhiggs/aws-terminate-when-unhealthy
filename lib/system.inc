@@ -219,3 +219,14 @@ function systemBootComplete() {
     return 1
   fi
 }
+
+function systemRecover() {
+  systemInfo "Running the recovery command to try and get things up again."
+
+  if $RECOVER_COMMAND; then
+    return 0
+  else
+    systemInfo "The recover command returned an error."
+    return 1
+  fi
+}
