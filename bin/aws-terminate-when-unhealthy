@@ -21,8 +21,8 @@ PID_FILE="/var/run/aws-terminate-when-unhealthy"
 START_TIME=`date +%s`
 EMAIL_RCPT="/dev/null"
 
-if ! systemBootComplete; then systemCleanup; exit 1; fi
-if ! systemCreateLock; then systemCleanup; exit 1; fi
+if ! systemBootComplete; then systemCleanUp; exit 1; fi
+if ! systemCreateLock; then systemCleanUp; exit 1; fi
 if ! elbPrimeData; then systemCleanUp; exit 1; fi
 if ! asPrimeData; then systemCleanUp; exit 1; fi
 if ! asMember; then systemCleanUp; exit 0; fi
