@@ -1,7 +1,7 @@
 function asPrimeData() {
   systemCheckVariableSet AS_TMP_FILE || return 1
   systemCheckVariableSet AS || return 1
-  as-describe-auto-scaling-groups $AS > $AS_TMP_FILE
+  as-describe-auto-scaling-groups $AS > $AS_TMP_FILE || systemSendEmail "AutoScalingGroup Details" "Failed to get the AutoScalingGroup details."
 
   if egrep '^No AutoScalingGroups found' $AS_TMP_FILE; then
     systemInfo "Could not obtain details for AutoScalingGroup '$AS'."
