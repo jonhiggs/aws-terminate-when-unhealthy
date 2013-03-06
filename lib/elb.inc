@@ -1,7 +1,7 @@
 function elbPrimeData() {
   systemCheckVariableSet ELB_TMP_FILE || return 1
   systemCheckVariableSet ELB || return 1
-  elb-describe-instance-health $ELB > $ELB_TMP_FILE
+  elb-describe-instance-health $ELB > $ELB_TMP_FILE || systemSendEmail "ELB Details" "Failed to get the ELB details."
   return 0
 }
 
