@@ -36,7 +36,7 @@ function asAddInstance() {
   if [ -z $SPUN_NEW_INSTANCE ]; then
     SPUN_NEW_INSTANCE='true'
     systemInfo "Increasing capacity of $AS to $((asCountInstances +1))."
-    $DRY_RUN || as-update-auto-scaling-group $AS --desired-capacity $((asCountInstances + 1))
+    as-update-auto-scaling-group $AS --desired-capacity $((`asCountInstances` + 1))
     return 0
   else
     return 1
