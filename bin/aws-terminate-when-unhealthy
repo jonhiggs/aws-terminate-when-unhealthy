@@ -33,6 +33,10 @@ if ! asMember; then systemCleanUp; exit 0; fi
 if ! elbMember; then systemCleanUp; exit 0; fi
 
 while elbOutOfService; do
+  # Lets run the recovery command straight up since we are out of service
+  # anyway. Maybe it will help.
+  systemRecover
+
   if serviceOutOfService; then
     asRemoveInstance && systemSendEmail "Terminating Instance" "Time to self destruct."
     systemCleanUp
